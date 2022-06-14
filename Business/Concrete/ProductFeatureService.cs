@@ -34,5 +34,11 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<ProductFeature>(_productFeatureManager.Get(x => x.Id == Id));
         }
+
+        public IDataResult<List<ProductFeature>> GetByProductId(int Id)
+        {
+            var result = _productFeatureManager.GetAll(x => x.ProductId == Id);
+            return new SuccessDataResult<List<ProductFeature>>(result);
+        }
     }
 }

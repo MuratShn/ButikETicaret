@@ -3,6 +3,7 @@ using Business.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTO_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,16 @@ namespace Business.Concrete
         private IResult Test()
         {
             return new ErrorResult("Test olarak hazırlandı hata");
+        }
+
+        public IDataResult<List<ProductDetailDto>> GetAllProductDetailDto()
+        {
+            return new SuccessDataResult<List<ProductDetailDto>>(_productManager.GetProductsDetail());
+        }
+
+        public IDataResult<ProductDetailDto> GetByIdProductDetailDto()
+        {
+            throw new NotImplementedException();
         }
     }
 }

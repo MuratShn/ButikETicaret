@@ -37,6 +37,8 @@ namespace WebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
             });
 
+            services.AddCors();
+
             services.AddSingleton<IProductDal, EfProductDal>();
             services.AddSingleton<IProductManager, ProductService>();
 

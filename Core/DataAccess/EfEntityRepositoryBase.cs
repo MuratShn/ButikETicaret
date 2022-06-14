@@ -60,7 +60,7 @@ namespace Core.DataAccess
         public void Update(T Entity)
         {
 
-            using (TContext context = new TContext()) //içinde yazılan nesneler bittiğinde bellekten anında atılır
+            using (TContext context = new()) //içinde yazılan nesneler bittiğinde bellekten anında atılır
             {
                 var updateddEntity = context.Entry(Entity);
                 updateddEntity.State = EntityState.Modified;

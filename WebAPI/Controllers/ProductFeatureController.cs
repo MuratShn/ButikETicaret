@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
         [HttpGet("getProductFeatureById")]
         public IActionResult GeyById(int id)
         {
-            var result = _productFeature.GetById(id);
+            var result = _productFeature.GetByProductId(id);
             return Ok(result);
         }
 

@@ -1,5 +1,6 @@
 ﻿using Core.Utilities.Results;
 using Entities.Concrete;
+using Entities.DTO_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,8 @@ namespace Business.Abstract
         IResult Delete(Product Entity);
         IDataResult<List<Product>> GetAll();
         IDataResult<Product> GetById(int id);
+
+        IDataResult<List<ProductDetailDto>> GetAllProductDetailDto();
+        IDataResult<ProductDetailDto> GetByIdProductDetailDto();
     }
 }

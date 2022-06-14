@@ -12,6 +12,6 @@ namespace Business.Abstract
     {
         IResult Add(ProductFeature Entity);
         IDataResult<List<ProductFeature>> GetAll();
-        IDataResult<ProductFeature> GetById(int Id);
+        IDataResult<List<ProductFeature>> GetByProductId(int Id);
     }
 }
