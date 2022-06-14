@@ -29,6 +29,14 @@ namespace WebAPI.Controllers
 
             return Ok();
         }
+
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            var result = _productManager.GetAll();
+            return Ok(result);
+        }
+
         [HttpPost]
         public IActionResult Add(Product product)
         {

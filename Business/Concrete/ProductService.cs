@@ -24,7 +24,7 @@ namespace Business.Concrete
             if (!validationResults.success)return validationResults;
 
             var rules = BusinessRules.Rules(UrunEkleme11DenOnceOlmalı(),Test()); //businnes işlemleri
-            if (!rules.success) return rules;
+            //if (!rules.success) return rules;
 
 
             _productManager.Add(Entity);
