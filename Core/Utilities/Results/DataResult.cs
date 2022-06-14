@@ -19,5 +19,10 @@ namespace Core.Utilities.Results
             messages = Messages;
             success = Success;
         }
+        public DataResult(T Data, bool Success)
+        {
+            data = Data;
+            success = Success;
+        }
     }
 }

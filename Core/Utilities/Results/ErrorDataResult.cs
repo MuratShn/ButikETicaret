@@ -14,5 +14,8 @@ namespace Core.Utilities.Results
         public ErrorDataResult(T Data, string Messages) : base(Data, Messages, false)
         {
         }
+        public ErrorDataResult(T Data) : base(Data,false)
+        {
+        }
     }
 }
