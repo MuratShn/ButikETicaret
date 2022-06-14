@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +11,10 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Product : ControllerBase
+    public class ProductController : ControllerBase
     {
         private readonly IProductManager _productManager;
-        public Product(IProductManager productManager)
+        public ProductController(IProductManager productManager)
         {
             _productManager = productManager;
         }
@@ -27,6 +28,12 @@ namespace WebAPI.Controllers
             //var y = _productManager.Delete(deleteVariable);
 
             return Ok();
+        }
+        [HttpPost]
+        public IActionResult Add(Product product)
+        {
+            var result = _productManager.Add(product);
+            return Ok(result);
         }
     }
 }

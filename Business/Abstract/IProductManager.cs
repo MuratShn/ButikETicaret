@@ -10,8 +10,8 @@ namespace Business.Abstract
 {
     public interface IProductManager
     {
-        IGeneralResult Add(Product Entity);
-        IGeneralResult Delete(Product Entity);
+        IResult Add(Product Entity);
+        IResult Delete(Product Entity);
         IDataResult<List<Product>> GetAll();
         IDataResult<Product> GetById(int id);
     }

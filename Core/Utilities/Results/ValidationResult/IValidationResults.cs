@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Results.ValidationResult
 {
-    public interface IValidationResult<T> : IResult
+    public interface IValidationResults<T> : IResult
     {
+        T messages { get; }
         bool success { get; }
-        T message { get; }
+
     }
 }

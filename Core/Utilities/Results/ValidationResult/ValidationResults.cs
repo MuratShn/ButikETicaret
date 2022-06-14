@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Results.ValidationResult
 {
-    public class ValidationResult<T> : IValidationResult<T>
+    public class ValidationResults<T> : IValidationResults<T>
     {
+        public T messages { get; }
+
         public bool success { get; }
 
-        public T message { get; }
-        public ValidationResult(T Messages,bool Success)
+        public ValidationResults(T Messages,bool Succes)
         {
-            message = Messages;
-            success = Success;
+            messages = Messages;
+            success = Succes;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -17,13 +18,20 @@ namespace Business.Concrete
         {
             _productManager = productManager;
         }
-        public IGeneralResult Add(Product Entity)
+        public IResult Add(Product Entity)
         {
+            var validationResults = ValidationTool<ProductValidator,Product>.Validate(Entity);
+
+            if (!validationResults.success)
+            {
+                return validationResults;
+            }
+
             _productManager.Add(Entity);
             return new SuccessResult("Başarıyla Eklendi");
         }
 
-        public IGeneralResult Delete(Product Entity)
+        public IResult Delete(Product Entity)
         {
             _productManager.Delete(Entity);
             return new SuccessResult("Başarıyla Silindi");
