@@ -20,12 +20,12 @@ namespace Business.Concrete
         }
         public IResult Add(Product Entity)
         {
-            var validationResults = ValidationTool<ProductValidator,Product>.Validate(Entity);
+            var validationResults = ValidationTool<ProductValidator,Product>.Validate(Entity); //validasyon
+            if (!validationResults.success)return validationResults;
 
-            if (!validationResults.success)
-            {
-                return validationResults;
-            }
+            var rules = BusinessRules.Rules(UrunEkleme11DenOnceOlmalı(),Test()); //businnes işlemleri
+            if (!rules.success) return rules;
+
 
             _productManager.Add(Entity);
             return new SuccessResult("Başarıyla Eklendi");
@@ -45,6 +45,19 @@ namespace Business.Concrete
         public IDataResult<Product> GetById(int id)
         {
             return new SuccessDataResult<Product>(_productManager.Get(x => x.Id == id));
+        }
+
+        private IResult UrunEkleme11DenOnceOlmalı()
+        {
+            if (DateTime.Now.Hour > 11)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult("Saat 11den sonra ürün eklenemez");
+        } 
+        private IResult Test()
+        {
+            return new ErrorResult("Test olarak hazırlandı hata");
         }
     }
 }

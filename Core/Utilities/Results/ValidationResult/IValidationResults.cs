@@ -8,8 +8,7 @@ namespace Core.Utilities.Results.ValidationResult
 {
     public interface IValidationResults<T> : IResult
     {
-        T messages { get; }
-        bool success { get; }
+        T errors { get; }
 
     }
 }

@@ -8,10 +8,10 @@ namespace Core.Utilities.Results.ValidationResult
 {
     public class SuccesValidationResult<T> : ValidationResults<T>
     {
-        public SuccesValidationResult(T Messages, bool Succes) : base(Messages, Succes)
+        public SuccesValidationResult(T Error, bool Succes) : base(Error, Succes)
         {
         }
-        public SuccesValidationResult(T Messages) : base(Messages, true)
+        public SuccesValidationResult(T Error) : base(Error, true)
         {
         }
     }

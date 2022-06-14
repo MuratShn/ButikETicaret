@@ -12,11 +12,11 @@ namespace Core.Utilities.Results
 
         public bool success { get; }
 
-        public string messages { get; }
+        public string message { get; }
         public DataResult(T Data,string Messages,bool Success)
         {
             data = Data;
-            messages = Messages;
+            message = Messages;
             success = Success;
         }
         public DataResult(T Data, bool Success)

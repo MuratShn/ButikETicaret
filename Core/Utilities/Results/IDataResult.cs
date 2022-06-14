@@ -9,7 +9,5 @@ namespace Core.Utilities.Results
     public interface IDataResult<T> : IResult
     {
         T data { get; }
-        bool success { get; }
-        string messages { get; }
     }
 }

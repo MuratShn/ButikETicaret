@@ -8,14 +8,22 @@ namespace Core.Utilities.Results.ValidationResult
 {
     public class ValidationResults<T> : IValidationResults<T>
     {
-        public T messages { get; }
+        public T errors { get; }
 
         public bool success { get; }
 
-        public ValidationResults(T Messages,bool Succes)
+        public string message { get; }
+
+        public ValidationResults(T Errors,bool Succes,string Message)
         {
-            messages = Messages;
             success = Succes;
+            errors = Errors;
+            message = Message;
+        }
+        public ValidationResults(T Errors, bool Succes)
+        {
+            success = Succes;
+            errors = Errors;
         }
     }
 }
