@@ -66,14 +66,19 @@ namespace Business.Concrete
             return new ErrorResult("Test olarak hazırlandı hata");
         }
 
-        public IDataResult<List<ProductDetailDto>> GetAllProductDetailDto()
+        public IDataResult<List<ProductDetailDto>> GetAllProductDetail()
         {
             return new SuccessDataResult<List<ProductDetailDto>>(_productManager.GetProductsDetail());
         }
 
-        public IDataResult<ProductDetailDto> GetByIdProductDetailDto()
+        public IDataResult<ProductDetailDto> GetByIdProductDetail(int id)
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<ProductDetailDto>(_productManager.GetByProductDetailById(id));
+        }
+
+        public IDataResult<NonFeatureProductByIdDto> GetByIdNonFeaturesProductDetail(int id)
+        {
+            return new SuccessDataResult<NonFeatureProductByIdDto>(_productManager.NonFeatureProductDetailById(id));
         }
     }
 }

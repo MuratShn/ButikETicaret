@@ -20,13 +20,19 @@ namespace TestConsole
             //    ProductName = "TestSil",
             //    Stok = 10
             //};
-            //EfProductDal ef = new EfProductDal();
+            EfProductDal ef = new EfProductDal();
 
             //ef.Add(product);
 
             //var s =buss(Test1(6), Test2(2));
             //Console.WriteLine(s);
+
+            //var s = ef.GetByProductDetailById(2);
             
+            var st = ef.GetProductsDetail();
+            var ts = ef.GetByProductDetailById(2);
+            var ss = ef.NonFeatureProductDetailById(2);
+
             Console.ReadKey();
         }
         public static bool buss(params bool[] results)

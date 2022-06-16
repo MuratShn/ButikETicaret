@@ -36,18 +36,18 @@ namespace WebAPI.Controllers
             var result = _productManager.GetAll();
             return Ok(result);
         }
-        [HttpGet("getAllDetail")]
-        public IActionResult GetAllDetail()
-        {
-            var result = _productManager.GetAllProductDetailDto();
-            return Ok(result);
-        }
-        [HttpGet("getByIdDetail")]
-        public IActionResult GetByIdDetail()
-        {
-            var result = _productManager.GetAllProductDetailDto();
-            return Ok(result);
-        }
+        //[HttpGet("getAllDetail")]
+        //public IActionResult GetAllDetail()
+        //{
+        //    var result = _productManager.GetAllProductDetailDto();
+        //    return Ok(result);
+        //}
+        //[HttpGet("getByIdDetail")]
+        //public IActionResult GetByIdDetail()
+        //{
+        //    var result = _productManager.GetAllProductDetailDto();
+        //    return Ok(result);
+        //}
 
         [HttpPost("productAdd")]
         public IActionResult Add(Product product)
