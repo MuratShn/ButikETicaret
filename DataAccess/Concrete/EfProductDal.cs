@@ -37,5 +37,27 @@ namespace DataAccess.Concrete
                 return result.ToList();
             }
         }
+
+        public NonFeatureProductByIdDto NonFeatureProductDetailById(int id)
+        {
+            using (Context context = new ())
+            {
+                var result = from p in context.Products where(p.Id == id)
+                             join cat in context.Categories on p.CategoryId equals cat.Id
+                             select new NonFeatureProductByIdDto
+                             {
+                                 Id = p.Id,
+                                 CategoryName = cat.Name,
+                                 Gender = p.Gender,
+                                 Material = p.Material,
+                                 Mold = p.Mold,
+                                 Price = p.Price,
+                                 ProductName = p.ProductName,
+                                 Status = p.Status,
+                                 Stok = p.Stok
+                             };
+                return result.First();
+            }
+        }
     }
 }

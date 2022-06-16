@@ -49,10 +49,17 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("productAdd")]
         public IActionResult Add(Product product)
         {
             var result = _productManager.Add(product);
+            return Ok(result);
+        }
+
+        [HttpPost("geyById")]
+        public IActionResult GetById(int id)
+        {
+            var result = _productManager.GetById(id);
             return Ok(result);
         }
     }

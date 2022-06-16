@@ -25,10 +25,10 @@ namespace Business.Concrete
             if (!validationResults.success)return validationResults;
 
             var rules = BusinessRules.Rules(UrunEkleme11DenOnceOlmalı(),Test()); //businnes işlemleri
-            //if (!rules.success) return rules;
+            if (!rules.success) return rules;
 
 
-            _productManager.Add(Entity);
+            //_productManager.Add(Entity);
             return new SuccessResult("Başarıyla Eklendi");
         }
 
@@ -45,7 +45,12 @@ namespace Business.Concrete
 
         public IDataResult<Product> GetById(int id)
         {
-            return new SuccessDataResult<Product>(_productManager.Get(x => x.Id == id));
+            var result = _productManager.Get(x => x.Id == id);
+            if (result == null)
+            {
+                return new ErrorDataResult<Product>(null,"Böyle bir ürün bulunmamakta");
+            }
+            return new SuccessDataResult<Product>(result);
         }
 
         private IResult UrunEkleme11DenOnceOlmalı()

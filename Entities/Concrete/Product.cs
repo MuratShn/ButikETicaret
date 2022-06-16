@@ -10,7 +10,7 @@ namespace Entities.Concrete
         public string Mold{ get; set; }
         public string Material{ get; set; }
         public int Stok{ get; set; }
-        public bool Gender{ get; set; }
+        public char Gender{ get; set; }
         public bool Status{ get; set; }
         public int Price{ get; set; }
     }
