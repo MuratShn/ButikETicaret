@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost("geyById")]
+        [HttpGet("getById")]
         public IActionResult GetById(int id)
         {
             var result = _productManager.GetById(id);
