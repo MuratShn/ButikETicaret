@@ -25,11 +25,17 @@ namespace Business.Concrete
             if (!validationResults.success)return validationResults;
 
             var rules = BusinessRules.Rules(UrunEkleme11DenOnceOlmalı(),Test()); //businnes işlemleri
-            if (!rules.success) return rules;
+            //if (!rules.success) return rules;
 
+            _productManager.Add(Entity);
 
             //_productManager.Add(Entity);
             return new SuccessResult("Başarıyla Eklendi");
+        }
+        public IDataResult<int> LastProduct()
+        {
+            var result = _productManager.GetAll().OrderByDescending(x => x.Id).First(); //userId ile duzenlenicek
+            return new SuccessDataResult<int>(result.Id);
         }
 
         public IResult Delete(Product Entity)
@@ -80,5 +86,7 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<NonFeatureProductByIdDto>(_productManager.NonFeatureProductDetailById(id));
         }
+
+       
     }
 }

@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Results;
+﻿using Business.Concrete;
+using Core.Utilities.Results;
 using DataAccess.Concrete;
 using Entities.Concrete;
 using System;
@@ -21,6 +22,7 @@ namespace TestConsole
             //    Stok = 10
             //};
             EfProductDal ef = new EfProductDal();
+            ProductService pd = new ProductService(new EfProductDal());
 
             //ef.Add(product);
 
@@ -28,10 +30,12 @@ namespace TestConsole
             //Console.WriteLine(s);
 
             //var s = ef.GetByProductDetailById(2);
-            
-            var st = ef.GetProductsDetail();
-            var ts = ef.GetByProductDetailById(2);
-            var ss = ef.NonFeatureProductDetailById(2);
+
+            //var st = ef.GetProductsDetail();
+            //var ts = ef.GetByProductDetailById(2);
+            //var ss = ef.NonFeatureProductDetailById(2);
+
+            var s = pd.LastProduct();
 
             Console.ReadKey();
         }
