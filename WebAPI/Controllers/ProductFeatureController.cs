@@ -19,19 +19,13 @@ namespace WebAPI.Controllers
             _productFeature = productFeature;
         }
         
-        [HttpPost]
+        [HttpPost("addFeatures")]
         public IActionResult Add(List<ProductFeature> Entities)
         {
-            foreach (var item in Entities)
-            {
-                var result = _productFeature.Add(item);
-                if (!result.success)
-                {
-                    return BadRequest(result);
-                }
-            }
-            return Ok();
+            var result = _productFeature.AddFeatures(Entities);
+            return Ok(result);
         }
+
         [HttpGet("getProductFeature")]
         public IActionResult GetAll()
         {

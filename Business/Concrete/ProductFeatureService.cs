@@ -24,6 +24,14 @@ namespace Business.Concrete
             _productFeatureManager.Add(Entity);
             return new SuccessResult("Ekleme Başarılı");
         }
+        public IResult AddFeatures(List<ProductFeature> Entities)
+        {
+            foreach (var item in Entities)
+            {
+                _productFeatureManager.Add(item);
+            }
+            return new SuccessResult("Ekleme Başarılı");
+        }
 
         public IDataResult<List<ProductFeature>> GetAll()
         {
