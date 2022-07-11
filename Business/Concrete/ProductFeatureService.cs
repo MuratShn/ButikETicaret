@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -13,10 +14,12 @@ namespace Business.Concrete
     public class ProductFeatureService : IProductFeatureManager
     {
         private readonly IProductFeatureDal _productFeatureManager;
+        private readonly IProductDal _productManager;
         
-        public ProductFeatureService(IProductFeatureDal productFeatureManager)
+        public ProductFeatureService(IProductFeatureDal productFeatureManager,IProductDal productManager)
         {
             _productFeatureManager = productFeatureManager;
+            _productManager = productManager;
         }
 
         public IResult Add(ProductFeature Entity)
@@ -26,10 +29,29 @@ namespace Business.Concrete
         }
         public IResult AddFeatures(List<ProductFeature> Entities)
         {
+            var stock = 0;
+            int productId = 0;
+
+           
             foreach (var item in Entities)
             {
-                _productFeatureManager.Add(item);
+                var validationResults = ValidationTool<ProductFeatureValidator, ProductFeature>.Validate(item); //validasyon
+
+                if (!validationResults.success)
+                    return validationResults;
+
+
+                productId = item.ProductId;
+                stock += item.Stock;
             }
+            var rules = BusinessRules.Rules(checkProduct(productId), checkStockQuantity(stock,productId));
+            
+            if (!rules.success)
+            {
+                return rules;
+            }
+
+            
             return new SuccessResult("Ekleme Başarılı");
         }
 
@@ -47,6 +69,25 @@ namespace Business.Concrete
         {
             var result = _productFeatureManager.GetAll(x => x.ProductId == Id);
             return new SuccessDataResult<List<ProductFeature>>(result);
+        }
+        private IResult checkProduct(int id) //hangi ürüne özellik eklenecekse o ürünü varmı yokmu bakıyoz
+        {
+            if(_productManager.GetAll().Any(x => x.Id == id))
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult("Ürün Bulunmamaktadır");
+
+        }
+        private IResult checkStockQuantity(int stock,int productId)
+        {
+            //checkProduct(productId); //buda kullanılabılır
+            var result = _productManager.Get(x => x.Id == productId);
+            if (result.Stok == stock)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult("Stok Adetleri Aynı olmak zorunda");
         }
     }
 }
