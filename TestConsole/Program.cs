@@ -37,6 +37,8 @@ namespace TestConsole
 
             var s = pd.LastProduct();
 
+
+
             Console.ReadKey();
         }
         public static bool buss(params bool[] results)
