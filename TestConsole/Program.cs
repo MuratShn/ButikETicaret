@@ -35,7 +35,7 @@ namespace TestConsole
             //var ts = ef.GetByProductDetailById(2);
             //var ss = ef.NonFeatureProductDetailById(2);
 
-            var s = pd.LastProduct();
+            var x = pd.MyProductDetail(1);
 
 
 

@@ -59,18 +59,6 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(result);
         }
 
-        private IResult UrunEkleme11DenOnceOlmalı()
-        {
-            if (DateTime.Now.Hour > 11)
-            {
-                return new SuccessResult();
-            }
-            return new ErrorResult("Saat 11den sonra ürün eklenemez");
-        } 
-        private IResult Test()
-        {
-            return new ErrorResult("Test olarak hazırlandı hata");
-        }
 
         public IDataResult<List<ProductDetailDto>> GetAllProductDetail()
         {
@@ -85,6 +73,25 @@ namespace Business.Concrete
         public IDataResult<NonFeatureProductByIdDto> GetByIdNonFeaturesProductDetail(int id)
         {
             return new SuccessDataResult<NonFeatureProductByIdDto>(_productManager.NonFeatureProductDetailById(id));
+        }
+        
+        public IDataResult<MyProductDetailDto> MyProductDetail(int id)
+        {
+            return new SuccessDataResult<MyProductDetailDto>(_productManager.GetByMyProduct(id));
+        }
+
+
+        private IResult UrunEkleme11DenOnceOlmalı()
+        {
+            if (DateTime.Now.Hour > 11)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult("Saat 11den sonra ürün eklenemez");
+        }
+        private IResult Test()
+        {
+            return new ErrorResult("Test olarak hazırlandı hata");
         }
 
        

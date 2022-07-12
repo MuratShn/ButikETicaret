@@ -12,6 +12,62 @@ namespace DataAccess.Concrete
 {
     public class EfProductDal : EfEntityRepositoryBase<Product, Context>, IProductDal
     {
+        public MyProductDetailDto GetByMyProduct(int id)
+        {
+            //Refactoring gelicek birden fazla ürün dönücek
+
+            using (Context context = new())
+            {
+                List<string> colors = new List<string>();
+                List<string> sizes = new List<string>();
+                
+                var features = from p in context.Products
+                               where (p.Id == id)
+                               join fea in context.ProductFeatures on p.Id equals fea.ProductId
+                               select new ProductFeature
+                               {
+                                   Id = fea.Id,
+                                   Color = fea.Color,
+                                   ProductId = p.Id,
+                                   Size = fea.Size,
+                                   Stock = fea.Stock
+                               };
+
+                foreach (var item in features)
+                {
+                    if (!colors.Contains(item.Color))
+                    {
+                        colors.Add(item.Color);
+                    }
+                    if (!sizes.Contains(item.Size))
+                    {
+                        sizes.Add(item.Size);
+                    }
+                }
+
+
+                var result = from p in context.Products
+                             where (p.Id == id)
+                             join cat in context.Categories on p.CategoryId equals cat.Id
+                             select new MyProductDetailDto
+                             {
+                                 Id = p.Id,
+                                 Gender = p.Gender,
+                                 CategoryName = cat.Name,
+                                 Material = p.Material,
+                                 Mold = p.Mold,
+                                 Price = p.Price,
+                                 ProductName = p.ProductName,
+                                 Status = p.Status,
+                                 Colors=colors,
+                                 Sizes=sizes,
+                                 Stok = p.Stok
+                             };
+
+                return result.First();
+            }
+        }
+
         public ProductDetailDto GetByProductDetailById(int id)
         {
 

@@ -68,5 +68,12 @@ namespace WebAPI.Controllers
             var result = _productManager.LastProduct();
             return Ok(result);
         }
+        [HttpGet("getMyProduct")]
+        public IActionResult MyProductDetail(int id)
+        {
+            var result = _productManager.MyProductDetail(id);
+            return Ok(result);
+        }
+        
     }
 }
