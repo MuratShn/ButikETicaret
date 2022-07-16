@@ -22,8 +22,14 @@ namespace WebAPI.Controllers
         [HttpPost("addProductImages"), DisableRequestSizeLimit]
         public IActionResult ProductImagesAdd([FromForm]ProductImageVM productImageVM)
         {
-            //var file = Request.Form.Files;
-            return Ok();
+            var result = _productImageManager.Add(productImageVM);
+            return Ok(result);
+        }
+        [HttpGet("Test")]
+        public IActionResult Test()
+        {
+            var result = _productImageManager.TesT();
+            return Ok(result);
         }
     }
 }

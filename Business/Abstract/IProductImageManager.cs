@@ -10,6 +10,7 @@ namespace Business.Abstract
 {
     public interface IProductImageManager
     {
-        IResult Add(List<ProductImageVM> productImages);
+        IResult Add(ProductImageVM productImages);
+        IResult TesT();
     }
 }

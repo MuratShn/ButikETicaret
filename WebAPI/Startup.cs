@@ -50,6 +50,9 @@ namespace WebAPI
 
             services.AddSingleton<IProductImageDal, EfProductImageDal>();
             services.AddSingleton<IProductImageManager, ProductImageService>();
+
+            services.AddSingleton<IConfiguration>(provider => Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
