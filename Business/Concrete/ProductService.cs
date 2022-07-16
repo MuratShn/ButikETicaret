@@ -75,11 +75,10 @@ namespace Business.Concrete
             return new SuccessDataResult<NonFeatureProductByIdDto>(_productManager.NonFeatureProductDetailById(id));
         }
         
-        public IDataResult<MyProductDetailDto> MyProductDetail(int id)
+        public IDataResult<List<MyProductDetailDto>> MyProductDetails(int id)
         {
-            return new SuccessDataResult<MyProductDetailDto>(_productManager.GetByMyProduct(id));
+            return new SuccessDataResult<List<MyProductDetailDto>>(_productManager.GetMyProducts(id));
         }
-
 
         private IResult UrunEkleme11DenOnceOlmalı()
         {
@@ -94,6 +93,6 @@ namespace Business.Concrete
             return new ErrorResult("Test olarak hazırlandı hata");
         }
 
-       
+      
     }
 }

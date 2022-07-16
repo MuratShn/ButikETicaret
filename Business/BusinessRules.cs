@@ -18,7 +18,7 @@ namespace Business
                     return item;
                 }
             }
-            return null;
+            return new SuccessResult();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Core.Utilities.Results;
+using Entities.ViewModel_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Business.Concrete
 {
     public class ProductImageService : IProductImageManager
     {
-        public IResult Add()
+        public IResult Add(List<ProductImageVM> productImages)
         {
             throw new NotImplementedException();
         }

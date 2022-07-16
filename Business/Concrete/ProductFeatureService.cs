@@ -51,6 +51,11 @@ namespace Business.Concrete
                 return rules;
             }
 
+            foreach (var item in Entities)
+            {
+                _productFeatureManager.Add(item);
+            }
+
             
             return new SuccessResult("Ekleme Başarılı");
         }

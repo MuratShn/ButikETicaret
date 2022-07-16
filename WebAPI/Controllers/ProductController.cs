@@ -71,7 +71,7 @@ namespace WebAPI.Controllers
         [HttpGet("getMyProduct")]
         public IActionResult MyProductDetail(int id)
         {
-            var result = _productManager.MyProductDetail(id);
+            var result = _productManager.MyProductDetails(id);
             return Ok(result);
         }
         

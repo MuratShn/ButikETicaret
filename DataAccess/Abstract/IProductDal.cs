@@ -16,6 +16,6 @@ namespace DataAccess.Abstract
 
         List<ProductDetailDto> GetProductsDetail();
 
-        MyProductDetailDto GetByMyProduct(int id);
+        List<MyProductDetailDto> GetMyProducts(int id);
     }
 }

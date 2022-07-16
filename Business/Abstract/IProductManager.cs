@@ -20,6 +20,6 @@ namespace Business.Abstract
         IDataResult<List<ProductDetailDto>> GetAllProductDetail();
         IDataResult<ProductDetailDto> GetByIdProductDetail(int id);
         IDataResult<NonFeatureProductByIdDto> GetByIdNonFeaturesProductDetail(int id);
-        IDataResult<MyProductDetailDto> MyProductDetail(int id);
+        IDataResult<List<MyProductDetailDto>> MyProductDetails(int id);
     }
 }

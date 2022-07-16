@@ -1,4 +1,5 @@
 ﻿using Core.Utilities.Results;
+using Entities.ViewModel_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Business.Abstract
 {
     public interface IProductImageManager
     {
-        IResult Add();
+        IResult Add(List<ProductImageVM> productImages);
     }
 }

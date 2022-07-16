@@ -12,18 +12,51 @@ namespace DataAccess.Concrete
 {
     public class EfProductDal : EfEntityRepositoryBase<Product, Context>, IProductDal
     {
-        public MyProductDetailDto GetByMyProduct(int id)
+        public List<MyProductDetailDto> GetMyProducts(int id)
         {
             //Refactoring gelicek birden fazla ürün dönücek
+            //Refactroing geldi ürünler userıdye göre geliyo temsili şekil altta verildi
+            #region RESULT ÖRNEĞİ
+            /*
+            Birden Fazla Donucek
 
-            using (Context context = new())
+            {categoryName: "Tişört"
+            colors: (3) ['Kırmızı', 'Mavi', 'Yeşil'] //liste 
+            gender: "1"
+            id: 1
+            material: "Pamuk"
+            mold: "Oversize"
+            price: 120
+            productName: "Kısa Kollu Pamuk Tişört"
+            sizes: (3) ['Smal', 'Medium', 'Large'] //liste 
+            status: true
+            stok: 20}
+            .....
+             
+             */
+            #endregion
+
+
+            using (Context context1 = new())
             {
-                List<string> colors = new List<string>();
-                List<string> sizes = new List<string>();
-                
-                var features = from p in context.Products
-                               where (p.Id == id)
-                               join fea in context.ProductFeatures on p.Id equals fea.ProductId
+                var products = from p in context1.Products
+                               where (p.UserId == id)
+                               join c in context1.Categories on p.CategoryId equals c.Id
+                               select new MyProductDetailDto()
+                               {
+                                   Id = p.Id,
+                                   Gender = p.Gender,
+                                   CategoryName = c.Name,
+                                   Material = p.Material,
+                                   Mold = p.Mold,
+                                   Price = p.Price,
+                                   ProductName = p.ProductName,
+                                   Status = p.Status,
+                                   Stok = p.Stok
+                               };
+                var features = from p in context1.Products
+                               where (p.UserId == id)
+                               join fea in context1.ProductFeatures on p.Id equals fea.ProductId
                                select new ProductFeature
                                {
                                    Id = fea.Id,
@@ -33,39 +66,41 @@ namespace DataAccess.Concrete
                                    Stock = fea.Stock
                                };
 
-                foreach (var item in features)
+                var pro = products.ToList();
+                var feat = features.ToList();
+
+
+                foreach (var item in pro)
                 {
-                    if (!colors.Contains(item.Color))
+                    List<string> color = new List<string>();
+                    List<string> size = new List<string>();
+
+                    foreach (var fea in feat)
                     {
-                        colors.Add(item.Color);
+                        if (item.Id == fea.ProductId)
+                        {
+                            if (!(size.Contains(fea.Size.ToString())))
+                            {
+                                size.Add(fea.Size.ToString());
+                                Console.WriteLine(fea.Color.ToString());
+
+                            }
+                            if (!(color.Contains(fea.Color.ToString())))
+                            {
+                                color.Add(fea.Color.ToString());
+                                Console.WriteLine(fea.Size.ToString());
+
+                            }
+                        }
                     }
-                    if (!sizes.Contains(item.Size))
-                    {
-                        sizes.Add(item.Size);
-                    }
+
+                    item.Sizes = size;
+                    item.Colors = color;
                 }
 
-
-                var result = from p in context.Products
-                             where (p.Id == id)
-                             join cat in context.Categories on p.CategoryId equals cat.Id
-                             select new MyProductDetailDto
-                             {
-                                 Id = p.Id,
-                                 Gender = p.Gender,
-                                 CategoryName = cat.Name,
-                                 Material = p.Material,
-                                 Mold = p.Mold,
-                                 Price = p.Price,
-                                 ProductName = p.ProductName,
-                                 Status = p.Status,
-                                 Colors=colors,
-                                 Sizes=sizes,
-                                 Stok = p.Stok
-                             };
-
-                return result.First();
+                return pro;
             }
+
         }
 
         public ProductDetailDto GetByProductDetailById(int id)

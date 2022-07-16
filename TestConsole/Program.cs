@@ -35,11 +35,12 @@ namespace TestConsole
             //var ts = ef.GetByProductDetailById(2);
             //var ss = ef.NonFeatureProductDetailById(2);
 
-            var x = pd.MyProductDetail(1);
+            var x = pd.GetAllProductDetail();
+            var y = pd.MyProductDetails(1);
 
 
 
-            Console.ReadKey();
+            Console.WriteLine();
         }
         public static bool buss(params bool[] results)
         {
