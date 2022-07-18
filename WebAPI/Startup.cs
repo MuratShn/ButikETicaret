@@ -2,6 +2,7 @@ using Business.Abstract;
 using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
+using Entities.Concrete.Identitiy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -50,6 +51,17 @@ namespace WebAPI
 
             services.AddSingleton<IProductImageDal, EfProductImageDal>();
             services.AddSingleton<IProductImageManager, ProductImageService>();
+
+            services.AddScoped<IIdentityManager, IdentityService>();
+
+            services.AddDbContext<Context>();
+            services.AddIdentity<AppUser, AppRole>(x=> {
+                x.Password.RequiredLength = 3;
+                x.Password.RequireDigit = false;
+                x.Password.RequireNonAlphanumeric = false;
+                x.Password.RequireLowercase = false;
+                x.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<Context>();
 
             services.AddSingleton<IConfiguration>(provider => Configuration);
 

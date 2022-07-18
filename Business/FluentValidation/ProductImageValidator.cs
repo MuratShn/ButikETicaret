@@ -1,4 +1,5 @@
 ﻿using Entities.Concrete;
+using Entities.ViewModel_s;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Business.FluentValidation
 {
-    public class ProductImageValidator : AbstractValidator<ProductImage>
+    public class ProductImageValidator : AbstractValidator<ProductImageVM>
     {
         public ProductImageValidator()
         {

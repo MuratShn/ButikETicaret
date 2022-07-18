@@ -1,5 +1,7 @@
 ﻿using Core.Entities.Concrete;
 using Entities.Concrete;
+using Entities.Concrete.Identitiy;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<AppUser,AppRole,int>
     {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server = .;Database=ButikDeneme;Integrated Security=True;");
         }
-        public DbSet<User> Users{ get; set; }
-        public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
-        public DbSet<OperationClaim> OperationClaims{ get; set; }
+        //public DbSet<User> Users{ get; set; }
+        //public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
+        //public DbSet<OperationClaim> OperationClaims{ get; set; }
 
         public DbSet<Product> Products{ get; set; }
         public DbSet<Address> Addresses{ get; set; }
