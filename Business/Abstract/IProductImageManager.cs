@@ -11,6 +11,5 @@ namespace Business.Abstract
     public interface IProductImageManager
     {
         IResult Add(ProductImageVM productImages);
-        IResult TesT();
     }
 }

@@ -25,11 +25,6 @@ namespace WebAPI.Controllers
             var result = _productImageManager.Add(productImageVM);
             return Ok(result);
         }
-        [HttpGet("Test")]
-        public IActionResult Test()
-        {
-            var result = _productImageManager.TesT();
-            return Ok(result);
-        }
+
     }
 }

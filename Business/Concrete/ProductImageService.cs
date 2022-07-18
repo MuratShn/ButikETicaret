@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using Entities.Concrete;
 using Entities.ViewModel_s;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,23 +25,37 @@ namespace Business.Concrete
         }
         public IResult Add(ProductImageVM productImages)
         {
+            var validationResults = ValidationTool<ProductImageValidator, ProductImageVM>.Validate(productImages); //validasyon
+
+            if (!validationResults.success) return validationResults;
+
+            var rules = BusinessRules.Rules(CheckImage(productImages), CheckSizeFile(productImages)); //businnes işlemleri
+            if (rules.success)
+                return rules;
+
             var code = _configuration.GetSection("StoredFilesPathProduct").Value;
-            var guid = Guid.NewGuid();
-            var ımagePath = guid.ToString() + "+" + productImages.Image[0].FileName;
-            var path = Path.Combine(code, ımagePath);
-            
-            using (var stream = new FileStream(path,FileMode.Create))
+
+            foreach (var item in productImages.Image)
             {
-                productImages.Image[0].CopyTo(stream);
+                var guid = Guid.NewGuid();
+                var ımagePath = guid.ToString() + "+" + item.FileName;
+                var path = Path.Combine(code, ımagePath);
+
+                var entity = new ProductImage { Color = productImages.Color, ProductId = productImages.ProductId, ProductPath = path };
+
+                _productImageManager.Add(entity);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    item.CopyTo(stream);
+                }
+
             }
 
-            //var rules = BusinessRules.Rules(CheckImage(productImages)); //businnes işlemleri
-            return null;
-        }
 
-        public IResult TesT()
-        {
-            return new SuccessResult();
+
+            
+            return new SuccessResult("Ürün Başarıyla Eklendi");
         }
 
         private IResult CheckImage(ProductImageVM productImages)
@@ -47,6 +63,17 @@ namespace Business.Concrete
             if (productImages.Image.All(x => x.Length < 1))
             {
                 return new ErrorResult("En az bir tane seçim yapmak zorundasınız");
+            }
+            return new SuccessResult();
+        }
+        private IResult CheckSizeFile(ProductImageVM productImages)
+        {
+            foreach (var item in productImages.Image)
+            {
+                if (item.Length > 1292555 || item.Length < 2)
+                {
+                    return new ErrorResult("Resim boyutu hatası");
+                }
             }
             return new SuccessResult();
         }
