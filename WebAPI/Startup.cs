@@ -61,6 +61,7 @@ namespace WebAPI
                 x.Password.RequireNonAlphanumeric = false;
                 x.Password.RequireLowercase = false;
                 x.Password.RequireUppercase = false;
+                x.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<Context>();
 
             services.AddSingleton<IConfiguration>(provider => Configuration);

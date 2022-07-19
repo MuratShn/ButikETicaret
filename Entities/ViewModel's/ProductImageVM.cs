@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Core.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Entities.ViewModel_s
 {
-    public class ProductImageVM
+    public class ProductImageVM : IVM
     {
         public int Id { get; set; }
         public string? ProductPath { get; set; }

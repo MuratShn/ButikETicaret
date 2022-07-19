@@ -31,7 +31,7 @@ namespace Business.Concrete
                 UserName = User.UserName,
                 Gender = User.Gender
             }, User.Password);
-            
+
             if (userresult.Result.Succeeded)
             {
                 return new SuccessResult("Başarıyla oluşturuldu");
