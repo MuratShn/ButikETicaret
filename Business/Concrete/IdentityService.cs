@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Utilities.Results;
 using Core.Utilities.Results.ValidationResult;
+using DataAccess.Concrete;
 using Entities.Concrete.Identitiy;
 using Entities.ViewModel_s;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ namespace Business.Concrete
     public class IdentityService : IIdentityManager
     {
         private readonly UserManager<AppUser> _userManager;
-        
+
         public IdentityService(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
@@ -40,6 +41,26 @@ namespace Business.Concrete
             {
                 return new ErrorResult(userresult.Result.Errors.ToString());
             }
+        }
+
+        public async Task<IResult> Login(UserLoginVM User)
+        {
+            var user = await _userManager.FindByNameAsync(User.UsernameOrEmail); //kullanıcı adından kontrol ettik
+
+            if (user == null)
+                user = await _userManager.FindByEmailAsync(User.UsernameOrEmail); //mailden kontrol ettik
+
+            if (user == null)
+                return new ErrorResult("Kullanıcı adı veya şifre hatalı"); //ikiside yoksa hatayı gonderdık
+
+            var result = await _userManager.CheckPasswordAsync(user, User.Password);
+            
+            if (result)
+            {
+                //giriş başarılı
+            }
+
+
         }
     }
 }

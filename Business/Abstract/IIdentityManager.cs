@@ -11,5 +11,6 @@ namespace Business.Abstract
     public interface IIdentityManager
     {
         IResult Add(CreateUserVM User);
+        Task<IResult> Login(UserLoginVM User);
     }
 }

@@ -26,5 +26,12 @@ namespace WebAPI.Controllers
             var result = _identityManager.Add(user);
             return Ok(result);
         }
+
+        [HttpPost("login")]
+        public async  Task<IActionResult> Login(UserLoginVM user)
+        {
+            var result = await _identityManager.Login(user);
+            return Ok(result);
+        }
     }
 }
