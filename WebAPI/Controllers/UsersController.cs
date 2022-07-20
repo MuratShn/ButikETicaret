@@ -21,9 +21,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult CreateUser(CreateUserVM user)
+        public async Task<IActionResult> CreateUser(CreateUserVM user)
         {
-            var result = _identityManager.Add(user);
+            var result = await _identityManager.Add(user);
             return Ok(result);
         }
 
@@ -31,6 +31,12 @@ namespace WebAPI.Controllers
         public async  Task<IActionResult> Login(UserLoginVM user)
         {
             var result = await _identityManager.Login(user);
+            return Ok(result);
+        }
+        [HttpPost("addRole")]
+        public async Task<IActionResult> AddRole(string role)
+        {
+            var result = await _identityManager.AddRole(role);
             return Ok(result);
         }
     }

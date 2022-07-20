@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,6 +32,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getAll")]
+        [Authorize(Roles = "Customer")]
         public IActionResult GetAll()
         {
             var result = _productManager.GetAll();

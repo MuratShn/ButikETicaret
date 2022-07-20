@@ -16,31 +16,50 @@ namespace Business.Concrete
     public class IdentityService : IIdentityManager
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<AppRole> _roleManager;
+        private readonly ITokenManager _tokenManager;
 
-        public IdentityService(UserManager<AppUser> userManager)
+        public IdentityService(UserManager<AppUser> userManager, ITokenManager tokenManager, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
+            _tokenManager = tokenManager;
+            _roleManager = roleManager;
         }
 
-        public IResult Add(CreateUserVM User)
+        public async Task<IResult> Add(CreateUserVM User)
         {
-            var userresult = _userManager.CreateAsync(new()
+            var user = new AppUser() //ellen üzer nesnesini olusturduk
             {
                 Email = User.Email,
                 Name = User.Name,
                 Surname = User.Surname,
                 UserName = User.UserName,
-                Gender = User.Gender
-            }, User.Password);
+                Gender = User.Gender,
+            };
 
-            if (userresult.Result.Succeeded)
+            var userresult = await _userManager.CreateAsync(user, User.Password); //database'e kaydettık sıfreyı ayrı yazdık o sayede haslandi
+
+
+            if (userresult.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, "Customer"); //user'a role ekledik
                 return new SuccessResult("Başarıyla oluşturuldu");
             }
             else
             {
-                return new ErrorResult(userresult.Result.Errors.ToString());
+                return new ErrorResult(userresult.Errors.ToString());
             }
+        }
+
+        public async Task<IResult> AddRole(string role)
+        {
+            var result = await _roleManager.CreateAsync(new() { Name = role });
+            if (result.Succeeded)
+            {
+                return new SuccessResult("Role Başarıyla eklendl");
+            }
+            return new ErrorResult("Hata");
+
         }
 
         public async Task<IResult> Login(UserLoginVM User)
@@ -54,12 +73,12 @@ namespace Business.Concrete
                 return new ErrorResult("Kullanıcı adı veya şifre hatalı"); //ikiside yoksa hatayı gonderdık
 
             var result = await _userManager.CheckPasswordAsync(user, User.Password);
-            
+
             if (result)
             {
-                //giriş başarılı
+                return _tokenManager.CreateToken(user);
             }
-
+            return new ErrorResult("Hata");
 
         }
     }

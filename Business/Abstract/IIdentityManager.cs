@@ -10,7 +10,8 @@ namespace Business.Abstract
 {
     public interface IIdentityManager
     {
-        IResult Add(CreateUserVM User);
+        Task<IResult> Add(CreateUserVM User);
         Task<IResult> Login(UserLoginVM User);
+        Task<IResult> AddRole(string role);
     }
 }
