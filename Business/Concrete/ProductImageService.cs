@@ -30,7 +30,7 @@ namespace Business.Concrete
             if (!validationResults.success) return validationResults;
 
             var rules = BusinessRules.Rules(CheckImage(productImages), CheckSizeFile(productImages)); //businnes işlemleri
-            if (rules.success)
+            if (!rules.success)
                 return rules;
 
             var code = _configuration.GetSection("StoredFilesPathProduct").Value;
@@ -58,9 +58,15 @@ namespace Business.Concrete
             return new SuccessResult("Ürün Başarıyla Eklendi");
         }
 
+        public IResult GetByProductIdOneImage(int productId)
+        {
+            var result = _productImageManager.Get(x => x.ProductId == productId);
+            return new SuccessDataResult<ProductImage>(result);
+        }
+
         private IResult CheckImage(ProductImageVM productImages)
         {
-            if (productImages.Image.All(x => x.Length < 1))
+            if (productImages.Image == null)
             {
                 return new ErrorResult("En az bir tane seçim yapmak zorundasınız");
             }

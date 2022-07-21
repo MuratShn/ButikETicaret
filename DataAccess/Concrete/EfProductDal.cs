@@ -4,6 +4,7 @@ using Entities.Concrete;
 using Entities.DTO_s;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace DataAccess.Concrete
 {
     public class EfProductDal : EfEntityRepositoryBase<Product, Context>, IProductDal
     {
+
         public List<MyProductDetailDto> GetMyProducts(int id)
         {
             //Refactoring gelicek birden fazla ürün dönücek
@@ -178,6 +180,27 @@ namespace DataAccess.Concrete
                     res[i].Features = f2;
                 }
 
+                var images = context.ProductImages.ToList();
+
+                if (images.Count > 0)
+                {
+                    foreach (var item in res)
+                    {
+                        var imagesList = new List<string>();
+                        foreach (var image in images)
+                        {
+                            if (image.ProductId == item.Id)
+                            {
+                                var path = image.ProductPath;
+                                byte[] bytes = File.ReadAllBytes(path);
+                                string image2 = Convert.ToBase64String(bytes);
+                                imagesList.Add(image2);
+                            }
+                        }
+                        item.Image = imagesList;
+                    }
+                }
+
                 return res;
             }
         }
@@ -204,33 +227,6 @@ namespace DataAccess.Concrete
                 return result.First();
             }
         }
-
-
-        //public List<ProductDetailDtos> GetProductsDetail()
-        //{
-
-        //    using (Context context = new Context())
-        //    {
-        //        var result = from p in context.Products
-        //                     join fea in context.ProductFeatures on p.Id equals fea.ProductId
-        //                     join cat in context.Categories on p.CategoryId equals cat.Id
-        //                     select new ProductDetailDtos
-        //                     {
-        //                         Id = p.Id,
-        //                         ProductName = p.ProductName,
-        //                         CategoryName = cat.Name,
-        //                         Mold = p.Mold,
-        //                         Material = p.Material,
-        //                         Gender = p.Gender,
-        //                         Status = p.Status,
-        //                         Price = p.Price,
-        //                         Size = fea.Size,
-        //                         Color = fea.Color,
-        //                         Stock = fea.Stock,
-        //                     };
-        //        return result.ToList();
-        //    }
-        //}
 
     }
 }

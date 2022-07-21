@@ -31,24 +31,12 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        [HttpGet("getAll")]
-        public IActionResult GetAll()
+        [HttpGet("getAllProductDetail")]
+        public IActionResult GetAllProductDetail()
         {
-            var result = _productManager.GetAll();
+            var result = _productManager.GetAllProductDetail();
             return Ok(result);
         }
-        //[HttpGet("getAllDetail")]
-        //public IActionResult GetAllDetail()
-        //{
-        //    var result = _productManager.GetAllProductDetailDto();
-        //    return Ok(result);
-        //}
-        //[HttpGet("getByIdDetail")]
-        //public IActionResult GetByIdDetail()
-        //{
-        //    var result = _productManager.GetAllProductDetailDto();
-        //    return Ok(result);
-        //}
 
         [HttpPost("productAdd")]
         public IActionResult Add(Product product)
@@ -63,12 +51,14 @@ namespace WebAPI.Controllers
             var result = _productManager.GetById(id);
             return Ok(result);
         }
+        
         [HttpGet("getLastProduct")]
         public IActionResult LastProduct()
         {
             var result = _productManager.LastProduct();
             return Ok(result);
         }
+        
         [HttpGet("getMyProduct")]
         [Authorize(Roles = "Customer")]
         public IActionResult MyProductDetail(int id)
