@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.ViewModel_s;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -37,6 +38,14 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> AddRole(string role)
         {
             var result = await _identityManager.AddRole(role);
+            return Ok(result);
+        }
+        [HttpGet("getUserProfile")]
+        [Authorize]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var userId = User.Identities.First().Name;
+            var result = await _identityManager.GetUserProfile(userId);
             return Ok(result);
         }
     }

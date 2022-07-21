@@ -5,16 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.ViewModel_s
+namespace Entities.DTO_s
 {
-    public class CreateUserVM :IVM
+    public class UserDetailDto:IDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
-        public char Gender { get; set; }
-        public string Password{ get; set; }
-        public string PasswordConfirm { get; set; }
+        public char Gender{ get; set; }
+        public List<string> Roles { get; set; }
+
+
     }
 }

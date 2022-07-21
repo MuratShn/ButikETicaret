@@ -1,5 +1,4 @@
-﻿using Core.Entities.Concrete;
-using Entities.Concrete;
+﻿using Entities.Concrete;
 using Entities.Concrete.Identitiy;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +17,6 @@ namespace DataAccess.Concrete
         {
             optionsBuilder.UseSqlServer("Server = .;Database=ButikDeneme;Integrated Security=True;");
         }
-        //public DbSet<User> Users{ get; set; }
-        //public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
-        //public DbSet<OperationClaim> OperationClaims{ get; set; }
 
         public DbSet<Product> Products{ get; set; }
         public DbSet<Address> Addresses{ get; set; }

@@ -3,6 +3,7 @@ using Core.Utilities.Results;
 using Core.Utilities.Results.ValidationResult;
 using DataAccess.Concrete;
 using Entities.Concrete.Identitiy;
+using Entities.DTO_s;
 using Entities.ViewModel_s;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -60,6 +61,15 @@ namespace Business.Concrete
             }
             return new ErrorResult("Hata");
 
+        }
+
+        public async Task<IResult> GetUserProfile(string userId)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = new UserDetailDto{ Email = user.Email, Gender = user.Gender, Id = user.Id, Name = user.Name, Roles = roles.ToList(), Surname = user.Surname, UserName = user.UserName };
+
+            return new DataResult<UserDetailDto>(result, true);
         }
 
         public async Task<IResult> Login(UserLoginVM User)
