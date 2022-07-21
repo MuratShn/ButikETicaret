@@ -44,6 +44,7 @@ namespace Business.Concrete
                 expires: token.Expiration,
                 notBefore: DateTime.UtcNow,
                 signingCredentials:signingCredentials,
+                
                 claims: SetClaims(user).Result.ToList()
                 );
             JwtSecurityTokenHandler tokenHandler = new();
@@ -62,6 +63,7 @@ namespace Business.Concrete
             {
                 claims.Add(new Claim(ClaimTypes.Role, item));
             }
+            claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
             
             return  claims;
         }

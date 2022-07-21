@@ -47,7 +47,7 @@ namespace Business.Concrete
             }
             else
             {
-                return new ErrorResult(userresult.Errors.ToString());
+                return new ErrorResult("Böyle bir kullanıcı bulunmaktadır");
             }
         }
 

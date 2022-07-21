@@ -32,7 +32,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getAll")]
-        [Authorize(Roles = "Customer")]
         public IActionResult GetAll()
         {
             var result = _productManager.GetAll();
@@ -71,6 +70,7 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
         [HttpGet("getMyProduct")]
+        [Authorize(Roles = "Customer")]
         public IActionResult MyProductDetail(int id)
         {
             var result = _productManager.MyProductDetails(id);
