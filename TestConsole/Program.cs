@@ -37,6 +37,8 @@ namespace TestConsole
 
             var x = pd.GetAllProductDetail();
             var y = pd.MyProductDetails(1);
+            var z = pd.GetById(1);
+            var xx = pd.GetByIdProductDetail(1);
 
 
 

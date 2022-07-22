@@ -21,7 +21,7 @@ namespace Entities.DTO_s
         public char Gender { get; set; }
         public bool Status { get; set; }
         public List<ProductFeature> Features { get; set; }
-        public List<string> Image { get; set; }
+        public List<ImageDto> Image { get; set; }
         public int Price { get; set; }
     }
 }

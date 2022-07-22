@@ -138,8 +138,32 @@ namespace DataAccess.Concrete
                                  Status = p.Status,
                                  Stok = p.Stok
                              };
+                var res = result.ToList();
 
-                return result.First();
+                var images = context.ProductImages.ToList();
+
+                if (images.Count > 0)
+                {
+                    foreach (var item in res)
+                    {
+                        var imagesList = new List<ImageDto>();
+                        foreach (var image in images)
+                        {
+                            if (image.ProductId == item.Id)
+                            {
+                                var path = image.ProductPath;
+                                byte[] bytes = File.ReadAllBytes(path);
+                                string image2 = Convert.ToBase64String(bytes);
+                                var dto = new ImageDto() { Color = image.Color, Image = image2 };
+                                imagesList.Add(dto);
+                            }
+                        }
+                        item.Image = imagesList;
+                    }
+                }
+
+
+                return res.First();
             }
         }
 
@@ -186,7 +210,7 @@ namespace DataAccess.Concrete
                 {
                     foreach (var item in res)
                     {
-                        var imagesList = new List<string>();
+                        var imagesList = new List<ImageDto>();
                         foreach (var image in images)
                         {
                             if (image.ProductId == item.Id)
@@ -194,7 +218,8 @@ namespace DataAccess.Concrete
                                 var path = image.ProductPath;
                                 byte[] bytes = File.ReadAllBytes(path);
                                 string image2 = Convert.ToBase64String(bytes);
-                                imagesList.Add(image2);
+                                var dto = new ImageDto() { Color = image.Color, Image = image2 };
+                                imagesList.Add(dto);
                             }
                         }
                         item.Image = imagesList;

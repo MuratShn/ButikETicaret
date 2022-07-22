@@ -29,7 +29,7 @@ namespace Business.Concrete
 
         public async Task<IResult> Add(CreateUserVM User)
         {
-            var user = new AppUser() //ellen üzer nesnesini olusturduk
+            var user = new AppUser() //ellen userer nesnesini olusturduk
             {
                 Email = User.Email,
                 Name = User.Name,
