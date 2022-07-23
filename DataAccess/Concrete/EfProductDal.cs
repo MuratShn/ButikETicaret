@@ -105,7 +105,7 @@ namespace DataAccess.Concrete
 
         }
 
-        public ProductDetailDto GetByProductDetailById(int id)
+        public ProductDetailDto GetByProductDetailById(int id, string color)
         {
 
             using (Context context = new())
@@ -113,6 +113,7 @@ namespace DataAccess.Concrete
                 var features = from p in context.Products
                                where (p.Id == id)
                                join fea in context.ProductFeatures on p.Id equals fea.ProductId
+                               where (fea.Color == color)
                                select new ProductFeature
                                {
                                    Id = fea.Id,
@@ -121,6 +122,16 @@ namespace DataAccess.Concrete
                                    Size = fea.Size,
                                    Stock = fea.Stock
                                };
+
+
+                var colors = new List<string>();
+                foreach (var item in context.ProductFeatures.Where(x => x.ProductId == id))
+                {
+                    if (!colors.Contains(item.Color))
+                    {
+                        colors.Add(item.Color);
+                    }
+                }
 
                 var result = from p in context.Products
                              where (p.Id == id)
@@ -136,31 +147,29 @@ namespace DataAccess.Concrete
                                  Price = p.Price,
                                  ProductName = p.ProductName,
                                  Status = p.Status,
+                                 Colors = colors,
                                  Stok = p.Stok
                              };
+
+
+
                 var res = result.ToList();
 
-                var images = context.ProductImages.ToList();
+                var images = context.ProductImages.Where(x => x.Color == color && x.ProductId == id).ToList();
+                var imagesList = new List<ImageDto>();
 
                 if (images.Count > 0)
                 {
-                    foreach (var item in res)
+                    foreach (var image in images)
                     {
-                        var imagesList = new List<ImageDto>();
-                        foreach (var image in images)
-                        {
-                            if (image.ProductId == item.Id)
-                            {
-                                var path = image.ProductPath;
-                                byte[] bytes = File.ReadAllBytes(path);
-                                string image2 = Convert.ToBase64String(bytes);
-                                var dto = new ImageDto() { Color = image.Color, Image = image2 };
-                                imagesList.Add(dto);
-                            }
-                        }
-                        item.Image = imagesList;
+                        var path = image.ProductPath;
+                        byte[] bytes = File.ReadAllBytes(path);
+                        string image2 = Convert.ToBase64String(bytes);
+                        var dto = new ImageDto() { Color = image.Color, Image = image2 };
+                        imagesList.Add(dto);
                     }
                 }
+                res[0].Image = imagesList;
 
 
                 return res.First();

@@ -67,5 +67,12 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
         
+    
+        [HttpGet("getByIdProductDetail")]
+        public IActionResult GetByIdProductDetail(int id,string color)
+        {
+            var result = _productManager.GetByIdProductDetail(id,color);
+            return Ok(result);
+        }
     }
 }

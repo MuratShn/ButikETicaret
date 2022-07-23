@@ -59,15 +59,14 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(result);
         }
 
-
         public IDataResult<List<ProductDetailDto>> GetAllProductDetail()
         {
             return new SuccessDataResult<List<ProductDetailDto>>(_productManager.GetProductsDetail());
         }
 
-        public IDataResult<ProductDetailDto> GetByIdProductDetail(int id)
+        public IDataResult<ProductDetailDto> GetByIdProductDetail(int id,string color)
         {
-            return new SuccessDataResult<ProductDetailDto>(_productManager.GetByProductDetailById(id));
+            return new SuccessDataResult<ProductDetailDto>(_productManager.GetByProductDetailById(id,color));
         }
 
         public IDataResult<NonFeatureProductByIdDto> GetByIdNonFeaturesProductDetail(int id)
@@ -79,6 +78,9 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<MyProductDetailDto>>(_productManager.GetMyProducts(id));
         }
+
+
+
 
         private IResult UrunEkleme11DenOnceOlmalı()
         {
