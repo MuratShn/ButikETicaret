@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using Entities.ViewModel_s;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,10 +42,14 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
         [HttpGet("getUserProfile")]
-        [Authorize]
         public async Task<IActionResult> GetUserProfile()
         {
             var userId = User.Identities.First().Name;
+
+            if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
+                return Ok(new ErrorResult("Giriş yapılmamıştır"));
+                //return BadRequest("Giriş yapılmamıştır");
+
             var result = await _identityManager.GetUserProfile(userId);
             return Ok(result);
         }
