@@ -53,5 +53,16 @@ namespace WebAPI.Controllers
             var result = await _identityManager.GetUserProfile(userId);
             return Ok(result);
         }
+        
+        [HttpGet("isAuth")]
+        public async Task<IActionResult> IsAuth()
+        {
+            var userId = User.Identities.First().Name;
+
+            if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
+                return  Ok(new ErrorResult("Başarısız"));
+            return Ok(new SuccessResult("Başarılı"));
+        }
+
     }
 }
