@@ -55,6 +55,9 @@ namespace WebAPI
             services.AddSingleton<IProductImageDal, EfProductImageDal>();
             services.AddSingleton<IProductImageManager, ProductImageService>();
 
+            services.AddSingleton<ILikedProductDal, EfLikedProductDal>();
+            services.AddSingleton<ILikedProductManager, LikedProductService>();
+
             services.AddScoped<ITokenManager, TokenService>();
 
             services.AddScoped<IIdentityManager, IdentityService>();
