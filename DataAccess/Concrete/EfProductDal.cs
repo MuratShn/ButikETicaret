@@ -199,17 +199,26 @@ namespace DataAccess.Concrete
                 var res = result.ToList();
                 var fet = features.ToList();
 
+              
+
                 for (int i = 0; i < res.Count(); i++)
                 {
                     var f2 = new List<ProductFeature>();
+                    var colors = new List<string>();
 
                     foreach (var item in fet)
                     {
                         if (item.ProductId == res[i].Id)
                         {
                             f2.Add(item);
+
+                            if (!colors.Contains(item.Color))
+                            {
+                                colors.Add(item.Color);
+                            }
                         }
                     }
+                    res[i].Colors = colors;
                     res[i].Features = f2;
                 }
 

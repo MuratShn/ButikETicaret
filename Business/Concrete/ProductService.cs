@@ -79,7 +79,10 @@ namespace Business.Concrete
             return new SuccessDataResult<List<MyProductDetailDto>>(_productManager.GetMyProducts(id));
         }
 
-
+        public IDataResult<List<ProductDetailDto>> getNewProducts(int count)
+        {
+            return new SuccessDataResult<List<ProductDetailDto>>(_productManager.GetProductsDetail().Take(count).ToList());
+        }
 
 
         private IResult UrunEkleme11DenOnceOlmalı()
@@ -95,6 +98,6 @@ namespace Business.Concrete
             return new ErrorResult("Test olarak hazırlandı hata");
         }
 
-      
+     
     }
 }

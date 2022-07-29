@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         public IActionResult ProductImagesAdd([FromForm]ProductImageVM productImageVM)
         {
             var result = _productImageManager.Add(productImageVM);
-            return Ok();
+            return Ok(result);
         }
 
     }
