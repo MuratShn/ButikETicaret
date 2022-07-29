@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DataAccess.Concrete
 {
     public class EfProductDal : EfEntityRepositoryBase<Product, Context>, IProductDal
-    {
+    { 
 
         public List<MyProductDetailDto> GetMyProducts(int id)
         {
