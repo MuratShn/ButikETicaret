@@ -40,7 +40,10 @@ namespace TestConsole
             var z = pd.GetById(1);
             var xx = pd.GetByIdProductDetail(1,"Kırmızı");
 
-
+            
+            var fp = new LikedProductService(new EfLikedProductDal());
+            
+            var r = fp.GetFavoriteProducts(1012);
 
             Console.WriteLine();
         }
