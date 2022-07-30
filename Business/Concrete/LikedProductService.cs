@@ -41,5 +41,16 @@ namespace Business.Concrete
             var result = _likedProductDal.GetFavoriteProducts(UserId);
             return new SuccessDataResult<List<ProductDetailDto>>(result);
         }
+
+        public IResult RemoveFavorite(int ProductId, int UserId)
+        {
+            var result = _likedProductDal.Get(x => x.ProductId == ProductId && x.UserId == UserId);
+            if (result is null)
+            {
+                return new ErrorResult("Hata");
+            }
+            _likedProductDal.Delete(result);
+            return new SuccessResult("Favorilerden kaldırıldı");
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace DataAccess.Concrete
             using (Context context = new())
             {
                 var features = context.ProductFeatures.ToList();
-                var favorites = context.LikedProducts.Where(x => x.UserId == userId).Select(x => x.Id).ToList();
+                var favorites = context.LikedProducts.Where(x => x.UserId == userId).Select(x => x.ProductId).ToList();
 
                 var result = from p in context.Products.Where(x=> favorites.Contains(x.Id))
                              join cat in context.Categories on p.CategoryId equals cat.Id

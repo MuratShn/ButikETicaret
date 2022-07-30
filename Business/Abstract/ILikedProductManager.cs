@@ -13,5 +13,6 @@ namespace Business.Abstract
     {
         IResult GetFavoriteProducts(int UserId);
         IResult AddFavorite(LikedProduct Entity);
+        IResult RemoveFavorite(int ProductId, int UserId);
     }
 }

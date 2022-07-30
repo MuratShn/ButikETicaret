@@ -28,11 +28,18 @@ namespace WebAPI.Controllers
             var result = _productLikedService.AddFavorite(entity);
             return Ok(result);
         }
-        [HttpGet("getFavorites")]
+        [HttpGet("getFavorite")]
         public IActionResult GetFavorites()
         {
             var userId = User.Identities.First().Name;
             var result = _productLikedService.GetFavoriteProducts(int.Parse(userId));
+            return Ok(result);
+        }
+        [HttpPost("removerFavorite")]
+        public IActionResult RemoveFavorites(LikedProduct entity)
+        {
+            var userId = User.Identities.First().Name;
+            var result = _productLikedService.RemoveFavorite(entity.ProductId, int.Parse(userId));
             return Ok(result);
         }
     }
