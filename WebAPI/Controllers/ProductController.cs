@@ -81,5 +81,6 @@ namespace WebAPI.Controllers
             var result = _productManager.getNewProducts(Count);
             return Ok(result);
         }
+
     }
 }
