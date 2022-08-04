@@ -17,5 +17,7 @@ namespace DataAccess.Abstract
         List<ProductDetailDto> GetProductsDetail();
 
         List<MyProductDetailDto> GetMyProducts(int id);
+
+        CartDto GetCarts(int featuresId,int productId,string color,string size);
     }
 }

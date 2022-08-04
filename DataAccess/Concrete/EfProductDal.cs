@@ -271,5 +271,33 @@ namespace DataAccess.Concrete
             }
         }
 
+        public CartDto GetCarts(int featuresId, int productId,string color,string size)
+        {
+            using (Context context = new())
+            {
+                CartDto result = new CartDto();
+                var product = context.Products.Where(x => x.Id == productId).SingleOrDefault();
+                var images = context.ProductImages.Where(x => x.ProductId == productId && x.Color == color).ToList();
+
+                if (images.Count > 0)
+                {
+                    var path = images[0].ProductPath;
+                    byte[] bytes = File.ReadAllBytes(path);
+                    string image2 = Convert.ToBase64String(bytes);
+                    var dto = new ImageDto() { Color = images[0].Color, Image = image2 };
+                    result.Image = dto;
+                }
+                result.Color = color;
+                result.Size = size;
+                result.ProductId = productId;
+                result.ProductName = product.ProductName;
+                result.ProductPrice = product.Price;
+                result.FeaturesId = featuresId;
+
+                return result;
+
+            }
+            throw new NotImplementedException();
+        }
     }
 }

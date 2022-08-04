@@ -22,5 +22,7 @@ namespace Business.Abstract
         IDataResult<NonFeatureProductByIdDto> GetByIdNonFeaturesProductDetail(int id);
         IDataResult<List<MyProductDetailDto>> MyProductDetails(int id);
         IDataResult<List<ProductDetailDto>> getNewProducts(int count);
+
+        IDataResult<CartDto> GetCart(int featuresId, int productId, string color, string size);
     }
 }

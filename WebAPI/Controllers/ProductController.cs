@@ -82,5 +82,13 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
+        [HttpGet("getCarts")]
+        public IActionResult GetCarts(int featuresId,int productId, string color, string size)
+        {
+            var result = _productManager.GetCart(featuresId, productId, color, size);
+            return Ok(result);
+        }
+
+
     }
 }
