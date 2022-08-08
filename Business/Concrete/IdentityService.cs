@@ -5,12 +5,15 @@ using DataAccess.Concrete;
 using Entities.Concrete.Identitiy;
 using Entities.DTO_s;
 using Entities.ViewModel_s;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace Business.Concrete
 {
@@ -19,12 +22,14 @@ namespace Business.Concrete
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly ITokenManager _tokenManager;
+        private readonly IConfiguration _configuration;
 
-        public IdentityService(UserManager<AppUser> userManager, ITokenManager tokenManager, RoleManager<AppRole> roleManager)
+        public IdentityService(UserManager<AppUser> userManager, ITokenManager tokenManager, RoleManager<AppRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _tokenManager = tokenManager;
             _roleManager = roleManager;
+            _configuration = configuration;
         }
 
         public async Task<IResult> Add(CreateUserVM User)
@@ -91,5 +96,44 @@ namespace Business.Concrete
             return new ErrorResult("Hata");
 
         }
+
+        public async Task<IResult> GoogleLogin(GoogleLoginVm User)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { _configuration["ExternalLogin:Google-Client-Id"] }
+            };
+            Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken,settings);
+            UserLoginInfo userLoginInfo = new(User.Provider, payload.Subject, User.Provider);
+            AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
+            bool result = user != null;
+
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email);
+                if (user == null)
+                {
+                    user = new()
+                    {
+                        Email = User.Email,
+                        Gender = '0',
+                        Name = User.FirstName,
+                        Surname = User.LastName,
+                        UserName = User.Email
+                    }; 
+                    IdentityResult createResult = await _userManager.CreateAsync(user);
+                    result = createResult.Succeeded;
+                }
+            }
+
+            if (result)
+                await _userManager.AddLoginAsync(user, userLoginInfo);
+            else
+                return new ErrorResult("Hata");
+
+            var token = _tokenManager.CreateToken(user);
+            return token;
+        }
+
     }
 }

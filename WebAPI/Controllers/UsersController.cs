@@ -35,6 +35,15 @@ namespace WebAPI.Controllers
             var result = await _identityManager.Login(user);
             return Ok(result);
         }
+       
+        
+        [HttpPost("googleLogin")]
+        public async Task<IActionResult> GoogleLogin(GoogleLoginVm user)
+        {
+            var result = await _identityManager.GoogleLogin(user);
+            return Ok(result);
+        }
+        
         [HttpPost("addRole")]
         public async Task<IActionResult> AddRole(string role)
         {

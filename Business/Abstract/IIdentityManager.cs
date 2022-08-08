@@ -12,6 +12,7 @@ namespace Business.Abstract
     {
         Task<IResult> Add(CreateUserVM User);
         Task<IResult> Login(UserLoginVM User);
+        Task<IResult> GoogleLogin(GoogleLoginVm User);
         Task<IResult> AddRole(string role);
 
         Task<IResult> GetUserProfile(string userId);
