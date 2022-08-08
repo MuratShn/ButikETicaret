@@ -34,7 +34,7 @@ namespace Business.Concrete
             SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(_configuration["Token:SecurityKey"]));
             SigningCredentials signingCredentials = new(securityKey, SecurityAlgorithms.HmacSha256);
 
-            token.Expiration = DateTime.UtcNow.AddMinutes(2);
+            token.Expiration = DateTime.UtcNow.AddMinutes(15);
 
 
 
@@ -44,7 +44,6 @@ namespace Business.Concrete
                 expires: token.Expiration,
                 notBefore: DateTime.UtcNow,
                 signingCredentials:signingCredentials,
-                
                 claims: SetClaims(user).Result.ToList()
                 );
             JwtSecurityTokenHandler tokenHandler = new();

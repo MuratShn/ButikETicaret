@@ -87,7 +87,9 @@ namespace WebAPI
 
                         ValidAudience=Configuration["Token:Audience"],
                         ValidIssuer= Configuration["Token:Issuer"],
-                        IssuerSigningKey =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:SecurityKey"]))
+                        IssuerSigningKey =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:SecurityKey"])),
+                        ClockSkew = TimeSpan.Zero
+                        
                     };
                 });
 
