@@ -154,7 +154,7 @@ namespace Business.Concrete
             if (user!=null)
             {
                 user.RefreshToken = refreshToken;
-                user.RefreshTokenEndDate = expretion.AddMinutes(5);
+                user.RefreshTokenEndDate = expretion.AddSeconds(15);
                 await _userManager.UpdateAsync(user);
             }
         }

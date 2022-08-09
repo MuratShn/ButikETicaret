@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Entities;
 using Core.Utilities.Results;
 using Entities.ViewModel_s;
 using Microsoft.AspNetCore.Authorization;
@@ -63,21 +64,21 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpGet("test")]
-        public async Task<IActionResult> Test([FromForm] string refreshToken)
+        [HttpPost("refreshTokenLogin")]
+        public async Task<IActionResult> RefreshTokenLogin([FromBody] AccessToken refreshToken)
         {
-            var result = await _identityManager.RefreshTokenLogin(refreshToken);
+            var result = await _identityManager.RefreshTokenLogin(refreshToken.RefreshToken);
             return Ok(result);
         }
 
 
-        [HttpGet("isAuth")]
+        [HttpGet("isAuth"),Authorize]
         public async Task<IActionResult> IsAuth()
         {
             var userId = User.Identities.First().Name;
 
             if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
-                return  Ok(new ErrorResult("Başarısız"));
+                return Ok(new ErrorResult("Başarısız"));
             return Ok(new SuccessResult("Başarılı"));
         }
 
