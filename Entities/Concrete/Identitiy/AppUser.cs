@@ -13,5 +13,8 @@ namespace Entities.Concrete.Identitiy
         public string Surname { get; set; }
         public char Gender { get; set; }
         public int LikedProductId { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenEndDate { get; set; }
+
     }
 }

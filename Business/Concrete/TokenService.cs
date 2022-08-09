@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -49,9 +50,21 @@ namespace Business.Concrete
             JwtSecurityTokenHandler tokenHandler = new();
             
             token.Token= tokenHandler.WriteToken(securityToken);
+            token.RefreshToken = CreateRefreshToken();
 
             return new DataResult<AccessToken>(token, "Başarılı",true);
         }
+
+        public string CreateRefreshToken()
+        {
+            byte[] number = new byte[32];
+            using (RandomNumberGenerator random = RandomNumberGenerator.Create())
+            {
+                random.GetBytes(number);
+                return Convert.ToBase64String(number);
+            }
+        }
+
         private async Task<IEnumerable<Claim>> SetClaims(AppUser user)
         {
             //Olusturulucak jwt'deki kişinin bilgileri

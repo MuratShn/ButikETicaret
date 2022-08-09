@@ -12,5 +12,6 @@ namespace Business.Abstract
     public interface ITokenManager
     {
         IDataResult<AccessToken> CreateToken(AppUser user );
+        string CreateRefreshToken();
     }
 }

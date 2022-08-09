@@ -62,7 +62,15 @@ namespace WebAPI.Controllers
             var result = await _identityManager.GetUserProfile(userId);
             return Ok(result);
         }
-        
+
+        [HttpGet("test")]
+        public async Task<IActionResult> Test([FromForm] string refreshToken)
+        {
+            var result = await _identityManager.RefreshTokenLogin(refreshToken);
+            return Ok(result);
+        }
+
+
         [HttpGet("isAuth")]
         public async Task<IActionResult> IsAuth()
         {

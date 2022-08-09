@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Entities;
 using Core.Utilities.Results;
 using Core.Utilities.Results.ValidationResult;
 using DataAccess.Concrete;
@@ -91,7 +92,9 @@ namespace Business.Concrete
 
             if (result)
             {
-                return _tokenManager.CreateToken(user);
+                var token = _tokenManager.CreateToken(user);
+                await UpdateRefreshToken(user, token.data.RefreshToken, token.data.Expiration); //diğer login işlemlerindede yapılmalı
+                return token;
             }
             return new ErrorResult("Hata");
 
@@ -134,6 +137,28 @@ namespace Business.Concrete
             var token = _tokenManager.CreateToken(user);
             return token;
         }
+        public async Task<IResult> RefreshTokenLogin(string refreshToken)
+        {
+            AppUser user = _userManager.Users.FirstOrDefault(x => x.RefreshToken == refreshToken);
+            if (user != null && user.RefreshTokenEndDate > DateTime.UtcNow)
+            {
+                var token = _tokenManager.CreateToken(user);
+                await UpdateRefreshToken(user, token.data.RefreshToken, token.data.Expiration);
+                return new SuccessDataResult<AccessToken>(token.data,"başarılı");
+            }
+            return new ErrorResult("Hata");
+        }
 
+        public async Task UpdateRefreshToken(AppUser user, string refreshToken, DateTime expretion) //
+        {
+            if (user!=null)
+            {
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenEndDate = expretion.AddMinutes(5);
+                await _userManager.UpdateAsync(user);
+            }
+        }
+
+      
     }
 }

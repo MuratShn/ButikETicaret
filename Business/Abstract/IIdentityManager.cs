@@ -1,9 +1,8 @@
-﻿using Core.Utilities.Results;
+﻿using Core.Entities;
+using Core.Utilities.Results;
+using Entities.Concrete.Identitiy;
 using Entities.ViewModel_s;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Abstract
@@ -14,7 +13,8 @@ namespace Business.Abstract
         Task<IResult> Login(UserLoginVM User);
         Task<IResult> GoogleLogin(GoogleLoginVm User);
         Task<IResult> AddRole(string role);
-
+        Task UpdateRefreshToken(AppUser user,string refreshToken,DateTime expretion);
+        Task<IResult> RefreshTokenLogin(string refreshToken);
         Task<IResult> GetUserProfile(string userId);
     }
 }
