@@ -10,6 +10,8 @@ namespace Entities.Concrete
     public class Address :IEntitiy
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
+        public string Title { get; set; }
         public string Adress { get; set; }
     }
 }
