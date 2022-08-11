@@ -3,6 +3,7 @@ using Business.FluentValidation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTO_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,11 +71,32 @@ namespace Business.Concrete
             return new SuccessDataResult<ProductFeature>(_productFeatureManager.Get(x => x.Id == Id));
         }
 
+
+
         public IDataResult<List<ProductFeature>> GetByProductId(int Id)
         {
             var result = _productFeatureManager.GetAll(x => x.ProductId == Id);
             return new SuccessDataResult<List<ProductFeature>>(result);
         }
+
+        public IResult ReduceStock(List<BasketDto> Entities)
+        {
+            foreach (var item in Entities)
+            {
+                var dbEntity = _productFeatureManager.Get(x => x.Id == item.Feature.Id);
+                
+                if (dbEntity.Stock > item.Quantitiy)
+                { 
+                    dbEntity.Stock = dbEntity.Stock - item.Quantitiy;
+                    _productFeatureManager.Update(dbEntity);
+                }
+                else
+                    throw new Exception("Olmaz Böyle şey");
+
+            }
+            return new SuccessResult("Stock azaltma başarılı");
+        }
+
         private IResult checkProduct(int id) //hangi ürüne özellik eklenecekse o ürünü varmı yokmu bakıyoz
         {
             if(_productManager.GetAll().Any(x => x.Id == id))

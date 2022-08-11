@@ -5,15 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Entities.DTO_s
 {
-    public class Order : IEntitiy
+    public class OderDto :IDto
     {
         public int Id { get; set; }
         public int UserId { get; set; }
         public int AddressId { get; set; }
-        public int Fee { get; set; } //toplam fiyat
         public DateTime OrderDate { get; set; }
+        public List<BasketDto> SoldProducts { get; set; }
+        public int Fee { get; set; }
 
     }
 }
+
+//id: number
+//userId:number
+//orderDate:Date
+//addressId:number
+//soldProducts:CartItem[]
+//fee:number

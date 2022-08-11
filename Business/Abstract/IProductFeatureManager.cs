@@ -1,5 +1,6 @@
 ﻿using Core.Utilities.Results;
 using Entities.Concrete;
+using Entities.DTO_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Business.Abstract
         IDataResult<List<ProductFeature>> GetAll();
         IDataResult<List<ProductFeature>> GetByProductId(int Id);
         IResult AddFeatures(List<ProductFeature> Entities);
+        IResult ReduceStock(List<BasketDto> Entities);
 
     }
 }
