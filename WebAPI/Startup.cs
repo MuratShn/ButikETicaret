@@ -61,6 +61,13 @@ namespace WebAPI
             services.AddSingleton<IAddressDal, EfAddressDal>();
             services.AddSingleton<IAddressManager, AddressService>();
 
+            services.AddSingleton<IOrderDal, EfCoreOrderDal>();
+            services.AddSingleton<IOrderManager, OrderService>();
+
+            services.AddSingleton<ISoldProductDal, EfCoreSoldProductDal>();
+            services.AddSingleton<ISoldProductManager, SoldProductService>();
+
+
             services.AddScoped<ITokenManager, TokenService>();
 
             services.AddScoped<IIdentityManager, IdentityService>();
