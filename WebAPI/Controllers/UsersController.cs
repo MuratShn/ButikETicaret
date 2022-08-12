@@ -46,12 +46,15 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost("addRole")]
+        [Authorize]
         public async Task<IActionResult> AddRole(string role)
         {
             var result = await _identityManager.AddRole(role);
             return Ok(result);
         }
+
         [HttpGet("getUserProfile")]
+        [Authorize]
         public async Task<IActionResult> GetUserProfile()
         {
             var userId = User.Identities.First().Name;

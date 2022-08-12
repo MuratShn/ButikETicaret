@@ -20,6 +20,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("addProductImages"), DisableRequestSizeLimit]
+        [Authorize(Roles = "SalesPerson")]
         public IActionResult ProductImagesAdd([FromForm]ProductImageVM productImageVM)
         {
             var result = _productImageManager.Add(productImageVM);

@@ -39,8 +39,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("productAdd")]
+        [Authorize(Roles ="SalesPerson")]
         public IActionResult Add(Product product)
         {
+            var userId = Convert.ToInt32(User.Identities.First().Name);
+            product.UserId = userId;
             var result = _productManager.Add(product);
             return Ok(result);
         }
@@ -51,27 +54,28 @@ namespace WebAPI.Controllers
             var result = _productManager.GetById(id);
             return Ok(result);
         }
-        
+
         [HttpGet("getLastProduct")]
         public IActionResult LastProduct()
         {
             var result = _productManager.LastProduct();
             return Ok(result);
         }
-        
+
         [HttpGet("getMyProduct")]
-        [Authorize(Roles = "Customer")]
-        public IActionResult MyProductDetail(int id)
+        [Authorize(Roles = "SalesPerson")]
+        public IActionResult MyProductDetail()
         {
-            var result = _productManager.MyProductDetails(id);
+            var userId = Convert.ToInt32(User.Identities.First().Name);
+            var result = _productManager.MyProductDetails(userId);
             return Ok(result);
         }
-        
-    
+
+
         [HttpGet("getByIdProductDetail")]
-        public IActionResult GetByIdProductDetail(int id,string color)
+        public IActionResult GetByIdProductDetail(int id, string color)
         {
-            var result = _productManager.GetByIdProductDetail(id,color);
+            var result = _productManager.GetByIdProductDetail(id, color);
             return Ok(result);
         }
 
@@ -83,7 +87,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getCarts")]
-        public IActionResult GetCarts(int featuresId,int productId, string color, string size)
+        public IActionResult GetCarts(int featuresId, int productId, string color, string size)
         {
             var result = _productManager.GetCart(featuresId, productId, color, size);
             return Ok(result);

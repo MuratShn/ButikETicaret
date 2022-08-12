@@ -18,6 +18,7 @@ namespace DataAccess.Concrete
         {
             //Refactoring gelicek birden fazla ürün dönücek
             //Refactroing geldi ürünler userıdye göre geliyo temsili şekil altta verildi
+            //refactoring geldi direk user'a göre donduruyor
             #region RESULT ÖRNEĞİ
             /*
             Birden Fazla Donucek
