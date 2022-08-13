@@ -25,6 +25,7 @@ namespace WebAPI.Controllers
         [HttpPost("addFavorites")]
         public IActionResult AddFavorites(LikedProduct entity)
         {
+            entity.UserId = Convert.ToInt32(User.Identities.First().Name);
             var result = _productLikedService.AddFavorite(entity);
             return Ok(result);
         }
