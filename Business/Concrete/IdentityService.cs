@@ -74,6 +74,8 @@ namespace Business.Concrete
             AppUser user = await _userManager.FindByIdAsync(userId);
             var roles = await _userManager.GetRolesAsync(user);
             var result = new UserDetailDto{ Email = user.Email, Gender = user.Gender, Id = user.Id, Name = user.Name, Roles = roles.ToList(), Surname = user.Surname, UserName = user.UserName };
+            
+            _userManager.Dispose();
 
             return new DataResult<UserDetailDto>(result, true);
         }
@@ -159,6 +161,21 @@ namespace Business.Concrete
             }
         }
 
-      
+        public async Task<IResult> RefreshPassowrd(string userId, string password, string newPassword)
+        {
+
+            AppUser user = await _userManager.FindByIdAsync(userId);
+
+            var result = await _userManager.ChangePasswordAsync(user, password, newPassword);
+
+            if (result.Succeeded)
+            {
+                return new SuccessResult("Şifre Başarıyla Değiştirilmiştir");
+            }
+            else
+            {
+                return new ErrorResult("Hata");
+            }
+        }
     }
 }

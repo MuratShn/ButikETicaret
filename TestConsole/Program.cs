@@ -38,12 +38,18 @@ namespace TestConsole
             var x = pd.GetAllProductDetail();
             var y = pd.MyProductDetails(1);
             var z = pd.GetById(1);
-            var xx = pd.GetByIdProductDetail(1,"Kırmızı");
+            var xx = pd.GetByIdProductDetail(1, "Kırmızı");
 
-            
+
             var fp = new LikedProductService(new EfLikedProductDal());
-            
+
             var r = fp.GetFavoriteProducts(1012);
+
+
+            EfCoreOrderDal of = new();
+            var result = of.GetMyOrders(1012);
+
+
 
             Console.WriteLine();
         }
@@ -68,5 +74,6 @@ namespace TestConsole
             if (id > 3) return true;
             return false;
         }
+
     }
 }

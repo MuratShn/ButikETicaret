@@ -16,5 +16,6 @@ namespace Business.Abstract
         Task UpdateRefreshToken(AppUser user,string refreshToken,DateTime expretion);
         Task<IResult> RefreshTokenLogin(string refreshToken);
         Task<IResult> GetUserProfile(string userId);
+        Task<IResult> RefreshPassowrd (string userId,string password,string newPassword);
     }
 }

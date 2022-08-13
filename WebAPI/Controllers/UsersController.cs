@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Core.Entities;
 using Core.Utilities.Results;
+using Entities.DTO_s;
 using Entities.ViewModel_s;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -74,16 +75,24 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-
-        [HttpGet("isAuth"),Authorize]
-        public async Task<IActionResult> IsAuth()
+        [HttpPost("refreshPassword")]
+        public async Task<IActionResult> RefreshPassword (NewPasswordDto password)
         {
             var userId = User.Identities.First().Name;
 
-            if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
-                return Ok(new ErrorResult("Başarısız"));
-            return Ok(new SuccessResult("Başarılı"));
+            var result = await _identityManager.RefreshPassowrd(userId, password.Password, password.NewPassword);
+            return Ok(result);
         }
+       
+        //[HttpGet("isAuth"),Authorize]
+        //public async Task<IActionResult> IsAuth()
+        //{
+        //    var userId = User.Identities.First().Name;
+
+        //    if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
+        //        return Ok(new ErrorResult("Başarısız"));
+        //    return Ok(new SuccessResult("Başarılı"));
+        //}
 
     }
 }
