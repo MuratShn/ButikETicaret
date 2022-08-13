@@ -11,5 +11,6 @@ namespace Business.Abstract
     public interface IOrderManager
     {
         IResult Add(OderDto entity);
+        IResult GetMyOrders(int userId);
     }
 }

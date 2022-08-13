@@ -45,5 +45,11 @@ namespace Business.Concrete
             return new SuccessResult("Sipariş Başarıyla Alınmıştır");
 
         }
+
+        public IResult GetMyOrders(int userId)
+        {
+            var result = _orderDal.GetMyOrders(userId);
+            return new SuccessDataResult<List<MyOrderDto>>(result);
+        }
     }
 }

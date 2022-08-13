@@ -29,5 +29,13 @@ namespace WebAPI.Controllers
             var result = _orderManager.Add(order);
             return Ok(result);
         }
+
+        [HttpGet("getMyOrders")]
+        public IActionResult GetMyOrders()
+        {
+            var result = _orderManager.GetMyOrders(Convert.ToInt32(User.Identities.First().Name));
+            return Ok(result);
+        }
+
     }
 }
