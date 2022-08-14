@@ -2,6 +2,7 @@
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTO_s;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Business.Concrete
 
         public IResult Add(ProductComment Entity)
         {
-            var comment = _productCommentDal.Get(x => x.UserId == Entity.UserId && x.ProductId == x.ProductId);
+            var comment = _productCommentDal.Get(x => x.UserId == Entity.UserId && x.ProductId == Entity.ProductId && x.Color == Entity.Color);
             if (comment == null)
             {
                 Entity.Date = DateTime.Now;
@@ -38,9 +39,8 @@ namespace Business.Concrete
 
         public IResult GetMyComment(int userId)
         {
-            var result = _productCommentDal.GetAll(x => x.UserId == userId);
-
-            throw new NotImplementedException();
+            var result = _productCommentDal.GetMyComments(userId);
+            return new SuccessDataResult<List<MyCommentDto>>(result);
         }
 
         public IResult GetProductComment()
