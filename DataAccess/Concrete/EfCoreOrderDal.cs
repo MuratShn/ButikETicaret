@@ -44,10 +44,16 @@ namespace DataAccess.Concrete
                     foreach (var item2 in item)
                     {
                         var path = context.ProductImages.Where(x => x.Color == item2.Color && x.ProductId == item2.ProductId).Select(x => x.ProductPath).FirstOrDefault();
-
-                        byte[] bytes = File.ReadAllBytes(path);
-                        string image = Convert.ToBase64String(bytes);
-                        item2.Image = image;
+                        if (path != null)
+                        {
+                            byte[] bytes = File.ReadAllBytes(path);
+                            string image = Convert.ToBase64String(bytes);
+                            item2.Image = image;
+                        }
+                        else
+                        {
+                            item2.Image = null;
+                        }
                     }
                 }
 
