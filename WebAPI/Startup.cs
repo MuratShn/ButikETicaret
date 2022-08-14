@@ -67,6 +67,9 @@ namespace WebAPI
             services.AddSingleton<ISoldProductDal, EfCoreSoldProductDal>();
             services.AddSingleton<ISoldProductManager, SoldProductService>();
 
+            services.AddSingleton<IProductCommentDal, EfProductCommentDal>();
+            services.AddSingleton<IProductCommentManager, ProductCommentService>();
+
 
             services.AddScoped<ITokenManager, TokenService>();
 

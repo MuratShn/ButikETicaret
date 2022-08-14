@@ -26,5 +26,6 @@ namespace DataAccess.Concrete
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<SoldProduct> SoldProducts{ get; set; }
+        public DbSet<ProductComment> ProductComments{ get; set; }
     }
 }
