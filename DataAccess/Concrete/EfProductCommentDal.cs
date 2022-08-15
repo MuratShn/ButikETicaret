@@ -18,22 +18,22 @@ namespace DataAccess.Concrete
             using (Context context = new())
             {
                 var res = from com in context.ProductComments.Where(x => x.UserId == userId)
-                             join p in context.Products on com.ProductId equals p.Id
-                             select new MyCommentDto
-                             {
-                                 Color = com.Color,
-                                 Comment = com.Comment,
-                                 Date = com.Date,
-                                 Id = com.Id,
-                                 ProductId = com.ProductId,
-                                 ProductName = p.ProductName
-                             };
+                          join p in context.Products on com.ProductId equals p.Id
+                          select new MyCommentDto
+                          {
+                              Color = com.Color,
+                              Comment = com.Comment,
+                              Date = com.Date,
+                              Id = com.Id,
+                              ProductId = com.ProductId,
+                              ProductName = p.ProductName
+                          };
 
                 var result = res.ToList();
-                
+
                 foreach (var item in result)
                 {
-                    var path = context.ProductImages.Where(x => x.ProductId == item.ProductId && x.Color == item.Color).Select(x=>x.ProductPath).FirstOrDefault();
+                    var path = context.ProductImages.Where(x => x.ProductId == item.ProductId && x.Color == item.Color).Select(x => x.ProductPath).FirstOrDefault();
                     if (path != null)
                     {
                         byte[] bytes = File.ReadAllBytes(path);
@@ -47,6 +47,25 @@ namespace DataAccess.Concrete
                 }
                 return result.ToList();
             }
+        }
+
+        public List<ProductCommentDto> GetProductComments(int productId) //color parametreside alınıp ürününün varyanlarına gorede yorumlar gosterılebılırdı fakat ben yorumları sadece ürün için göstericem az yorum olucak çünkü
+        {
+            using (Context context = new())
+            {
+                var result = from com in context.ProductComments.Where(x => x.ProductId == productId)
+                             join user in context.Users on com.UserId equals user.Id
+                             select new ProductCommentDto
+                             {
+
+                                 FirstName = user.Name,
+                                 SurName = user.Surname,
+                                 Comment = com.Comment,
+                                 Date = com.Date
+                             };
+                return result.ToList();
+            }
+            throw new NotImplementedException();
         }
     }
 }

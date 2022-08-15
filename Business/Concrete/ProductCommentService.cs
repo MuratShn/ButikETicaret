@@ -43,9 +43,10 @@ namespace Business.Concrete
             return new SuccessDataResult<List<MyCommentDto>>(result);
         }
 
-        public IResult GetProductComment()
+        public IResult GetProductComment(int productId)
         {
-            throw new NotImplementedException();
+            var result = _productCommentDal.GetProductComments(productId);
+            return new SuccessDataResult<List<ProductCommentDto>>(result);
         }
     }
 }

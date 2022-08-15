@@ -12,5 +12,6 @@ namespace DataAccess.Abstract
     public interface IProductCommentDal  : IEntitiyRepository<ProductComment>
     {
         List<MyCommentDto> GetMyComments(int userId);
+        List<ProductCommentDto> GetProductComments(int productId);
     }
 }

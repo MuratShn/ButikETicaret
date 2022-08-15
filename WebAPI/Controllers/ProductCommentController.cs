@@ -39,5 +39,12 @@ namespace WebAPI.Controllers
             var result = _productComment.GetMyComment(userId);
             return Ok(result);
         }
+
+        [HttpGet("getProductComments")]
+        public IActionResult GetMyComments(int productId)
+        {
+            var result = _productComment.GetProductComment(productId);
+            return Ok(result);
+        }
     }
 }

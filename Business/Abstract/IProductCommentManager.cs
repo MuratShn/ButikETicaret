@@ -12,6 +12,6 @@ namespace Business.Abstract
     {
         IResult Add(ProductComment Entity);
         IResult GetMyComment(int UserId);
-        IResult GetProductComment();
+        IResult GetProductComment(int productId);
     }
 }
