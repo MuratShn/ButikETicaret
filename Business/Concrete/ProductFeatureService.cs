@@ -33,7 +33,9 @@ namespace Business.Concrete
             var stock = 0;
             int productId = 0;
 
-           
+            if (Entities.Count <= 0)
+                return new ErrorResult("Varyant eklemelisiniz");
+
             foreach (var item in Entities)
             {
                 var validationResults = ValidationTool<ProductFeatureValidator, ProductFeature>.Validate(item); //validasyon
@@ -45,20 +47,32 @@ namespace Business.Concrete
                 productId = item.ProductId;
                 stock += item.Stock;
             }
-            var rules = BusinessRules.Rules(checkProduct(productId), checkStockQuantity(stock,productId));
-            
+            var rules = BusinessRules.Rules(checkProduct(productId));
+
+            int featureStock = _productFeatureManager.GetAll(x => x.ProductId == productId).Select(x => x.Stock).Sum();
+            int productStock = _productManager.Get(x => x.Id == productId).Stok;
+
+
+
             if (!rules.success)
             {
                 return rules;
             }
 
-            foreach (var item in Entities)
+            if (productStock >= featureStock + stock)
             {
-                _productFeatureManager.Add(item);
+                foreach (var item in Entities)
+                {
+                    _productFeatureManager.Add(item);
+                }
+                return new SuccessResult("Ekleme Başarılı");
+            }
+            else
+            {
+                    return new ErrorResult($"Stoklarda uyuşmazlık oldu eklemek isteğiniz Stok: {featureStock} Zaten Eklenmiş Olan Stok: {stock}  Ürünün Stoku: {productStock}");
             }
 
-            
-            return new SuccessResult("Ekleme Başarılı");
+
         }
 
         public IDataResult<List<ProductFeature>> GetAll()
@@ -105,16 +119,6 @@ namespace Business.Concrete
             }
             return new ErrorResult("Ürün Bulunmamaktadır");
 
-        }
-        private IResult checkStockQuantity(int stock,int productId)
-        {
-            //checkProduct(productId); //buda kullanılabılır
-            var result = _productManager.Get(x => x.Id == productId);
-            if (result.Stok == stock)
-            {
-                return new SuccessResult();
-            }
-            return new ErrorResult("Stok Adetleri Aynı olmak zorunda");
         }
     }
 }

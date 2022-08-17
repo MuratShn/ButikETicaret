@@ -15,8 +15,8 @@ namespace Business.FluentValidation
             RuleFor(x=>x.Stock).GreaterThan(0).WithMessage("Stok adedi 0'dan büyük olmak zorunda");
             RuleFor(x => x.Size).Must(SizeCheck).WithMessage("Bedenler Yanlış");
             
-            RuleFor(x => x.Color).NotEmpty().WithMessage("Boş olamaz");
-            RuleFor(x => x.Size).NotEmpty().WithMessage("Boş olamaz"); 
+            RuleFor(x => x.Color).NotEmpty().WithMessage("Renk Boş olamaz");
+            RuleFor(x => x.Size).NotEmpty().WithMessage("Beden Boş olamaz"); 
             RuleFor(x => x.Stock).NotEmpty().WithMessage("Boş olamaz");
 
         }
