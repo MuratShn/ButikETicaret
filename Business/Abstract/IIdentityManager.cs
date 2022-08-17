@@ -11,7 +11,8 @@ namespace Business.Abstract
     {
         Task<IResult> Add(CreateUserVM User);
         Task<IResult> Login(UserLoginVM User);
-        Task<IResult> GoogleLogin(GoogleLoginVm User);
+        Task<IResult> GoogleLogin(GoogleLoginVm User); 
+        Task<IResult> FacebookLogin(GoogleLoginVm User);
         Task<IResult> AddRole(string role);
         Task UpdateRefreshToken(AppUser user,string refreshToken,DateTime expretion);
         Task<IResult> RefreshTokenLogin(string refreshToken);

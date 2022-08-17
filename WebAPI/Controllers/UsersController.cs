@@ -45,7 +45,14 @@ namespace WebAPI.Controllers
             var result = await _identityManager.GoogleLogin(user);
             return Ok(result);
         }
-        
+
+        [HttpPost("facebookLogin")]
+        public async Task<IActionResult> FacebookLogin(GoogleLoginVm user)
+        {
+            var result = await _identityManager.FacebookLogin(user);
+            return Ok(result);
+        }
+
         [HttpPost("addRole")]
         [Authorize]
         public async Task<IActionResult> AddRole(string role)

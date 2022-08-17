@@ -106,6 +106,8 @@ namespace WebAPI
                     };
                 });
 
+            services.AddHttpClient();
+
             services.AddSingleton<IConfiguration>(provider => Configuration);
 
         }

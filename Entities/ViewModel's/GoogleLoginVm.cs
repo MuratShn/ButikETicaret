@@ -17,6 +17,9 @@ namespace Entities.ViewModel_s
         public string PhotoUrl { get; set; }
         public string Provider { get; set; }
 
+        //facebook içi tekrar class olusmak ıstemedım
+        public string AuthToken { get; set; }
+
     }
 }
 

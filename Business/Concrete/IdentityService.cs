@@ -12,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
@@ -20,17 +22,21 @@ namespace Business.Concrete
 {
     public class IdentityService : IIdentityManager
     {
+        //Google Facebook login kısmında kod tekrarı var refactoring yapılmaı
+
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly ITokenManager _tokenManager;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public IdentityService(UserManager<AppUser> userManager, ITokenManager tokenManager, RoleManager<AppRole> roleManager, IConfiguration configuration)
+        public IdentityService(UserManager<AppUser> userManager, ITokenManager tokenManager, RoleManager<AppRole> roleManager, IConfiguration configuration, HttpClient httpClient)
         {
             _userManager = userManager;
             _tokenManager = tokenManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         public async Task<IResult> Add(CreateUserVM User)
@@ -73,8 +79,8 @@ namespace Business.Concrete
         {
             AppUser user = await _userManager.FindByIdAsync(userId);
             var roles = await _userManager.GetRolesAsync(user);
-            var result = new UserDetailDto{ Email = user.Email, Gender = user.Gender, Id = user.Id, Name = user.Name, Roles = roles.ToList(), Surname = user.Surname, UserName = user.UserName };
-            
+            var result = new UserDetailDto { Email = user.Email, Gender = user.Gender, Id = user.Id, Name = user.Name, Roles = roles.ToList(), Surname = user.Surname, UserName = user.UserName };
+
             _userManager.Dispose();
 
             return new DataResult<UserDetailDto>(result, true);
@@ -108,7 +114,7 @@ namespace Business.Concrete
             {
                 Audience = new List<string>() { _configuration["ExternalLogin:Google-Client-Id"] }
             };
-            Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken,settings);
+            Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken, settings);
             UserLoginInfo userLoginInfo = new(User.Provider, payload.Subject, User.Provider);
             AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
             bool result = user != null;
@@ -125,7 +131,7 @@ namespace Business.Concrete
                         Name = User.FirstName,
                         Surname = User.LastName,
                         UserName = User.Email
-                    }; 
+                    };
                     IdentityResult createResult = await _userManager.CreateAsync(user);
                     result = createResult.Succeeded;
                 }
@@ -146,14 +152,14 @@ namespace Business.Concrete
             {
                 var token = _tokenManager.CreateToken(user);
                 await UpdateRefreshToken(user, token.data.RefreshToken, token.data.Expiration);
-                return new SuccessDataResult<AccessToken>(token.data,"başarılı");
+                return new SuccessDataResult<AccessToken>(token.data, "başarılı");
             }
             return new ErrorResult("Hata");
         }
 
         public async Task UpdateRefreshToken(AppUser user, string refreshToken, DateTime expretion) //
         {
-            if (user!=null)
+            if (user != null)
             {
                 user.RefreshToken = refreshToken;
                 user.RefreshTokenEndDate = expretion.AddSeconds(15);
@@ -175,6 +181,67 @@ namespace Business.Concrete
             else
             {
                 return new ErrorResult("Hata");
+            }
+        }
+
+        public async Task<IResult> FacebookLogin(GoogleLoginVm User)
+        {
+
+            var accessToken = await _httpClient.GetStringAsync("https://graph.facebook.com/oauth/access_token?client_id=517652853462350&client_secret=8a9fa102f1f876d11cee0d4405d958dd&grant_type=client_credentials");
+
+            var access = JsonSerializer.Deserialize<FacebookDto>(accessToken);
+            var check = await _httpClient.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={User.AuthToken}&access_token={access.AccessToken}");
+
+
+
+            var checkResult = JsonSerializer.Deserialize<FacebookResultValidationDto>(check);
+
+            if (checkResult.Data.IsValid)
+            {
+                string userInfo = await _httpClient.GetStringAsync($"https://graph.facebook.com/me?fields=email,name&access_token={User.AuthToken}");
+
+
+                //
+
+                UserLoginInfo userLoginInfo = new("FACEBOOK", checkResult.Data.UserId, "FACEBOOK");
+
+                AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
+
+                bool result = user != null;
+
+                if (user == null)
+                {
+                    user = await _userManager.FindByEmailAsync(User.Email);
+
+                    if (user == null)
+                    {
+                        user = new()
+                        {
+                            Email = User.Email,
+                            Gender = '0',
+                            Name = User.FirstName,
+                            Surname = User.LastName,
+                            UserName = User.Email
+                        };
+                        IdentityResult createResult = await _userManager.CreateAsync(user);
+                        result = createResult.Succeeded;
+                    }
+                }
+
+                if (result)
+                    await _userManager.AddLoginAsync(user, userLoginInfo);
+                else
+                    return new ErrorResult("Bu Emaile Sahip Bir Kullanıcı Zaten Bulunmakta ");
+
+                var token = _tokenManager.CreateToken(user);
+                return token;
+
+                //
+            }
+
+            else
+            {
+                return new ErrorResult("Giriş yapılamadı");
             }
         }
     }
