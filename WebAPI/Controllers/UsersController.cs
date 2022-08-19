@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Caching;
 using Core.Entities;
 using Core.Utilities.Results;
 using Entities.DTO_s;
@@ -18,10 +19,12 @@ namespace WebAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IIdentityManager _identityManager;
+        private readonly ICacheManager _cacheManager;
 
-        public UsersController(IIdentityManager identityManager)
+        public UsersController(IIdentityManager identityManager, ICacheManager cacheManager)
         {
             _identityManager = identityManager;
+            _cacheManager = cacheManager;
         }
 
         [HttpPost("register")]
@@ -34,6 +37,8 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public async  Task<IActionResult> Login(UserLoginVM user)
         {
+            _cacheManager.RemoveByPattern("UserService.GetUser");
+
             var result = await _identityManager.Login(user);
             return Ok(result);
         }
@@ -41,6 +46,8 @@ namespace WebAPI.Controllers
         [HttpPost("externalLogin")]
         public async Task<IActionResult> ExternalLogin(GoogleLoginVm User)
         {
+            _cacheManager.RemoveByPattern("UserService.GetUser");
+
             var result = await _identityManager.ExternalLogin(User);
             return Ok(result);
         }
@@ -57,6 +64,11 @@ namespace WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserProfile()
         {
+            if (_cacheManager.IsAdd("UserService.GetUser"))
+            {
+                return  Ok(_cacheManager.Get<IResult>("UserService.GetUser"));
+            }
+
             var userId = User.Identities.First().Name;
 
             if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
@@ -64,6 +76,8 @@ namespace WebAPI.Controllers
                 //return BadRequest("Giriş yapılmamıştır");
 
             var result = await _identityManager.GetUserProfile(userId);
+
+            _cacheManager.Add("UserService.GetUser", result);
             return Ok(result);
         }
 

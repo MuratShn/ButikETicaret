@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Core.Caching;
+using Core.Utilities.Results;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +17,13 @@ namespace WebAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductManager _productManager;
-        public ProductController(IProductManager productManager)
+        private readonly ICacheManager _cacheManager;
+        public ProductController(IProductManager productManager, ICacheManager cacheManager)
         {
             _productManager = productManager;
+            _cacheManager = cacheManager;
         }
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -31,7 +36,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        [HttpGet("getAllProductDetail")]
+        [HttpGet("getAllProductDetail")] //cache ekleyınce çok kasıyor
         public IActionResult GetAllProductDetail()
         {
             var result = _productManager.GetAllProductDetail();
@@ -42,9 +47,13 @@ namespace WebAPI.Controllers
         [Authorize(Roles ="SalesPerson")]
         public IActionResult Add(Product product)
         {
+
             var userId = Convert.ToInt32(User.Identities.First().Name);
             product.UserId = userId;
             var result = _productManager.Add(product);
+
+            _cacheManager.RemoveByPattern("ProductService.get"); //ürün eklendiyse get'ler siliniyor
+            
             return Ok(result);
         }
 
@@ -52,6 +61,7 @@ namespace WebAPI.Controllers
         public IActionResult GetById(int id)
         {
             var result = _productManager.GetById(id);
+
             return Ok(result);
         }
 
@@ -60,7 +70,7 @@ namespace WebAPI.Controllers
         public IActionResult LastProduct()
         {
             var userId = Convert.ToInt32(User.Identities.First().Name);
-            var result = _productManager.LastProduct(userıd);
+            var result = _productManager.LastProduct(userId);
             return Ok(result);
         }
 
@@ -78,6 +88,7 @@ namespace WebAPI.Controllers
         public IActionResult GetByIdProductDetail(int id, string color)
         {
             var result = _productManager.GetByIdProductDetail(id, color);
+            
             return Ok(result);
         }
 
