@@ -52,9 +52,6 @@ namespace Business.Concrete
 
             }
 
-
-
-            
             return new SuccessResult("Ürün Başarıyla Eklendi");
         }
 

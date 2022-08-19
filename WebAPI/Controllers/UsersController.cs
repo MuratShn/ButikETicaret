@@ -37,19 +37,11 @@ namespace WebAPI.Controllers
             var result = await _identityManager.Login(user);
             return Ok(result);
         }
-       
-        
-        [HttpPost("googleLogin")]
-        public async Task<IActionResult> GoogleLogin(GoogleLoginVm user)
-        {
-            var result = await _identityManager.GoogleLogin(user);
-            return Ok(result);
-        }
 
-        [HttpPost("facebookLogin")]
-        public async Task<IActionResult> FacebookLogin(GoogleLoginVm user)
+        [HttpPost("externalLogin")]
+        public async Task<IActionResult> ExternalLogin(GoogleLoginVm User)
         {
-            var result = await _identityManager.FacebookLogin(user);
+            var result = await _identityManager.ExternalLogin(User);
             return Ok(result);
         }
 
@@ -90,16 +82,9 @@ namespace WebAPI.Controllers
             var result = await _identityManager.RefreshPassowrd(userId, password.Password, password.NewPassword);
             return Ok(result);
         }
-       
-        //[HttpGet("isAuth"),Authorize]
-        //public async Task<IActionResult> IsAuth()
-        //{
-        //    var userId = User.Identities.First().Name;
+      
 
-        //    if (userId == null) //authorize koymadık onun yerine böyle bi kotrnol sagladık
-        //        return Ok(new ErrorResult("Başarısız"));
-        //    return Ok(new SuccessResult("Başarılı"));
-        //}
+    
 
     }
 }

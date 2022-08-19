@@ -107,21 +107,56 @@ namespace Business.Concrete
             return new ErrorResult("Hata");
 
         }
-
-        public async Task<IResult> GoogleLogin(GoogleLoginVm User)
+        public async Task<IResult> ExternalLogin(GoogleLoginVm User)
         {
-            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            UserLoginInfo userLoginInfo = null;
+
+            if (User.Provider == "GOOGLE")
             {
-                Audience = new List<string>() { _configuration["ExternalLogin:Google-Client-Id"] }
-            };
-            Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken, settings);
-            UserLoginInfo userLoginInfo = new(User.Provider, payload.Subject, User.Provider);
+                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new List<string>() { _configuration["ExternalLogin:Google-Client-Id"] }
+                };
+                Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken, settings);
+                userLoginInfo = new(User.Provider, payload.Subject, User.Provider);
+            }
+
+
+            else if (User.Provider == "FACEBOOK")
+            {
+
+                var accessToken = await _httpClient.GetStringAsync("https://graph.facebook.com/oauth/access_token?client_id=517652853462350&client_secret=8a9fa102f1f876d11cee0d4405d958dd&grant_type=client_credentials");
+
+                var access = JsonSerializer.Deserialize<FacebookDto>(accessToken);
+                var check = await _httpClient.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={User.AuthToken}&access_token={access.AccessToken}");
+
+
+
+                var checkResult = JsonSerializer.Deserialize<FacebookResultValidationDto>(check);
+
+                if (checkResult.Data.IsValid)
+                {
+                    string userInfo = await _httpClient.GetStringAsync($"https://graph.facebook.com/me?fields=email,name&access_token={User.AuthToken}");
+
+                    userLoginInfo = new("FACEBOOK", checkResult.Data.UserId, "FACEBOOK");
+                }
+                else
+                {
+                    return new ErrorResult("Giriş Başarısız");
+                }
+            }
+
+            if (userLoginInfo == null) //ikisinide girmesse boş kalıcak
+                return new ErrorResult("Hatalı Giriş oldu");
+
             AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
+
             bool result = user != null;
 
             if (user == null)
             {
-                user = await _userManager.FindByEmailAsync(payload.Email);
+                user = await _userManager.FindByEmailAsync(User.Email);
+
                 if (user == null)
                 {
                     user = new()
@@ -140,11 +175,14 @@ namespace Business.Concrete
             if (result)
                 await _userManager.AddLoginAsync(user, userLoginInfo);
             else
-                return new ErrorResult("Hata");
+                return new ErrorResult("Bu E-Maile Sahip Bir Kullanıcı Zaten Bulunmakta ");
 
             var token = _tokenManager.CreateToken(user);
             return token;
+
         }
+
+    
         public async Task<IResult> RefreshTokenLogin(string refreshToken)
         {
             AppUser user = _userManager.Users.FirstOrDefault(x => x.RefreshToken == refreshToken);
@@ -184,65 +222,143 @@ namespace Business.Concrete
             }
         }
 
-        public async Task<IResult> FacebookLogin(GoogleLoginVm User)
-        {
+        //public async Task<IResult> FacebookLogin(GoogleLoginVm User)
+        //{
 
-            var accessToken = await _httpClient.GetStringAsync("https://graph.facebook.com/oauth/access_token?client_id=517652853462350&client_secret=8a9fa102f1f876d11cee0d4405d958dd&grant_type=client_credentials");
+        //    var accessToken = await _httpClient.GetStringAsync("https://graph.facebook.com/oauth/access_token?client_id=517652853462350&client_secret=8a9fa102f1f876d11cee0d4405d958dd&grant_type=client_credentials");
 
-            var access = JsonSerializer.Deserialize<FacebookDto>(accessToken);
-            var check = await _httpClient.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={User.AuthToken}&access_token={access.AccessToken}");
-
-
-
-            var checkResult = JsonSerializer.Deserialize<FacebookResultValidationDto>(check);
-
-            if (checkResult.Data.IsValid)
-            {
-                string userInfo = await _httpClient.GetStringAsync($"https://graph.facebook.com/me?fields=email,name&access_token={User.AuthToken}");
+        //    var access = JsonSerializer.Deserialize<FacebookDto>(accessToken);
+        //    var check = await _httpClient.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={User.AuthToken}&access_token={access.AccessToken}");
 
 
-                //
 
-                UserLoginInfo userLoginInfo = new("FACEBOOK", checkResult.Data.UserId, "FACEBOOK");
+        //    var checkResult = JsonSerializer.Deserialize<FacebookResultValidationDto>(check);
 
-                AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
+        //    if (checkResult.Data.IsValid)
+        //    {
+        //        string userInfo = await _httpClient.GetStringAsync($"https://graph.facebook.com/me?fields=email,name&access_token={User.AuthToken}");
 
-                bool result = user != null;
 
-                if (user == null)
-                {
-                    user = await _userManager.FindByEmailAsync(User.Email);
+        //        //
 
-                    if (user == null)
-                    {
-                        user = new()
-                        {
-                            Email = User.Email,
-                            Gender = '0',
-                            Name = User.FirstName,
-                            Surname = User.LastName,
-                            UserName = User.Email
-                        };
-                        IdentityResult createResult = await _userManager.CreateAsync(user);
-                        result = createResult.Succeeded;
-                    }
-                }
+        //        UserLoginInfo userLoginInfo = new("FACEBOOK", checkResult.Data.UserId, "FACEBOOK");
 
-                if (result)
-                    await _userManager.AddLoginAsync(user, userLoginInfo);
-                else
-                    return new ErrorResult("Bu Emaile Sahip Bir Kullanıcı Zaten Bulunmakta ");
+        //        AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
 
-                var token = _tokenManager.CreateToken(user);
-                return token;
+        //        bool result = user != null;
 
-                //
-            }
+        //        if (user == null)
+        //        {
+        //            user = await _userManager.FindByEmailAsync(User.Email);
 
-            else
-            {
-                return new ErrorResult("Giriş yapılamadı");
-            }
-        }
+        //            if (user == null)
+        //            {
+        //                user = new()
+        //                {
+        //                    Email = User.Email,
+        //                    Gender = '0',
+        //                    Name = User.FirstName,
+        //                    Surname = User.LastName,
+        //                    UserName = User.Email
+        //                };
+        //                IdentityResult createResult = await _userManager.CreateAsync(user);
+        //                result = createResult.Succeeded;
+        //            }
+        //        }
+
+        //        if (result)
+        //            await _userManager.AddLoginAsync(user, userLoginInfo);
+        //        else
+        //            return new ErrorResult("Bu Emaile Sahip Bir Kullanıcı Zaten Bulunmakta ");
+
+        //        var token = _tokenManager.CreateToken(user);
+        //        return token;
+
+        //        //
+        //    }
+
+        //    else
+        //    {
+        //        return new ErrorResult("Giriş yapılamadı");
+        //    }
+        //}
+
+        //public async Task<IResult> GoogleLogin(GoogleLoginVm User)
+        //{
+        //    var settings = new GoogleJsonWebSignature.ValidationSettings()
+        //    {
+        //        Audience = new List<string>() { _configuration["ExternalLogin:Google-Client-Id"] }
+        //    };
+        //    Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken, settings);
+        //    UserLoginInfo userLoginInfo = new(User.Provider, payload.Subject, User.Provider);
+        //    AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
+        //    bool result = user != null;
+
+        //    if (user == null)
+        //    {
+        //        user = await _userManager.FindByEmailAsync(payload.Email);
+        //        if (user == null)
+        //        {
+        //            user = new()
+        //            {
+        //                Email = User.Email,
+        //                Gender = '0',
+        //                Name = User.FirstName,
+        //                Surname = User.LastName,
+        //                UserName = User.Email
+        //            };
+        //            IdentityResult createResult = await _userManager.CreateAsync(user);
+        //            result = createResult.Succeeded;
+        //        }
+        //    }
+
+        //    if (result)
+        //        await _userManager.AddLoginAsync(user, userLoginInfo);
+        //    else
+        //        return new ErrorResult("Hata");
+
+        //    var token = _tokenManager.CreateToken(user);
+        //    return token;
+        //}
+
+        // ------------------------------------------- GOOGLE ------------------------------------------
+
+        //public async Task<IResult> GoogleLogin(GoogleLoginVm User)
+        //{
+        //    var settings = new GoogleJsonWebSignature.ValidationSettings()
+        //    {
+        //        Audience = new List<string>() { _configuration["ExternalLogin:Google-Client-Id"] }
+        //    };
+        //    Payload payload = await GoogleJsonWebSignature.ValidateAsync(User.IdToken, settings);
+        //    UserLoginInfo userLoginInfo = new(User.Provider, payload.Subject, User.Provider);
+        //    AppUser user = await _userManager.FindByLoginAsync(userLoginInfo.LoginProvider, userLoginInfo.ProviderKey);
+        //    bool result = user != null;
+
+        //    if (user == null)
+        //    {
+        //        user = await _userManager.FindByEmailAsync(payload.Email);
+        //        if (user == null)
+        //        {
+        //            user = new()
+        //            {
+        //                Email = User.Email,
+        //                Gender = '0',
+        //                Name = User.FirstName,
+        //                Surname = User.LastName,
+        //                UserName = User.Email
+        //            };
+        //            IdentityResult createResult = await _userManager.CreateAsync(user);
+        //            result = createResult.Succeeded;
+        //        }
+        //    }
+
+        //    if (result)
+        //        await _userManager.AddLoginAsync(user, userLoginInfo);
+        //    else
+        //        return new ErrorResult("Hata");
+
+        //    var token = _tokenManager.CreateToken(user);
+        //    return token;
+        //}
     }
 }
