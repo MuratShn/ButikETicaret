@@ -98,14 +98,14 @@ namespace Business.Concrete
             foreach (var item in Entities)
             {
                 var dbEntity = _productFeatureManager.Get(x => x.Id == item.Feature.Id);
-                
+
                 if (dbEntity.Stock > item.Quantitiy)
-                { 
+                {
                     dbEntity.Stock = dbEntity.Stock - item.Quantitiy;
                     _productFeatureManager.Update(dbEntity);
                 }
                 else
-                    throw new Exception("Olmaz Böyle şey");
+                    return new ErrorResult("Olmaz Öyle Şey");
 
             }
             return new SuccessResult("Stock azaltma başarılı");

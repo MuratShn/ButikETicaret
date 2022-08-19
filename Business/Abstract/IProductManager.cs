@@ -15,7 +15,7 @@ namespace Business.Abstract
         IResult Delete(Product Entity);
         IDataResult<List<Product>> GetAll();
         IDataResult<Product> GetById(int id);
-        IDataResult<int> LastProduct();
+        IDataResult<int> LastProduct(int userId);
 
         IDataResult<List<ProductDetailDto>> GetAllProductDetail();
         IDataResult<ProductDetailDto> GetByIdProductDetail(int id, string color);

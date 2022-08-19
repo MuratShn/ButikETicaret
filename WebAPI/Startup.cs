@@ -1,5 +1,7 @@
 using Business.Abstract;
 using Business.Concrete;
+using Core.Caching;
+using Core.Caching.Microsoft;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Identitiy;
@@ -69,6 +71,9 @@ namespace WebAPI
 
             services.AddSingleton<IProductCommentDal, EfProductCommentDal>();
             services.AddSingleton<IProductCommentManager, ProductCommentService>();
+
+            services.AddMemoryCache();//microsoft cache için 
+            services.AddSingleton<ICacheManager, MicrosoftCacheService>();//microsoft cache için 
 
 
             services.AddScoped<ITokenManager, TokenService>();

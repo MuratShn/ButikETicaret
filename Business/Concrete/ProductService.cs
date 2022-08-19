@@ -32,9 +32,9 @@ namespace Business.Concrete
             //_productManager.Add(Entity);
             return new SuccessResult("Başarıyla Eklendi");
         }
-        public IDataResult<int> LastProduct()
+        public IDataResult<int> LastProduct(int userId)
         {
-            var result = _productManager.GetAll().OrderByDescending(x => x.Id).First(); //userId ile duzenlenicek
+            var result = _productManager.GetAll(x=>x.UserId == userId).OrderByDescending(x => x.Id).First(); //userId ile duzenlenicek
             return new SuccessDataResult<int>(result.Id);
         }
 
