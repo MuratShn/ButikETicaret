@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Business.Concrete
 {
@@ -25,24 +26,34 @@ namespace Business.Concrete
 
         public IResult Add(OderDto entity)
         {
-
-            entity.OrderDate = DateTime.Now;
-            var order = new Entities.Concrete.Order() { AddressId = entity.AddressId, Fee = entity.Fee, OrderDate = entity.OrderDate, UserId = entity.UserId };
-
-            var result1 =  _productFeatureManager.ReduceStock(entity.SoldProducts); //stokları azalttık
-
-            if (result1.success)
-                _orderDal.Add(order);
-            else
-                throw new Exception("Olmaz Böyle şey OrderDa Patladık");
-
-            var result2 = _soldProductManager.Add(entity.SoldProducts,order.Id);
-
-            if (!result2.success)
+            using(TransactionScope scope = new())
             {
-                return new ErrorResult("Siparişte Hata Oluştu");
+                try
+                {
+                    entity.OrderDate = DateTime.Now;
+                    var order = new Entities.Concrete.Order() { AddressId = entity.AddressId, Fee = entity.Fee, OrderDate = entity.OrderDate, UserId = entity.UserId };
+
+                    var result1 = _productFeatureManager.ReduceStock(entity.SoldProducts); //stokları azalttık
+
+                    if (result1.success)
+                        _orderDal.Add(order);
+                    else
+                        throw new Exception("Olmaz Böyle şey OrderDa Patladık");
+
+                    var result2 = _soldProductManager.Add(entity.SoldProducts, order.Id);
+
+                    if (!result2.success)
+                    {
+                        throw new Exception("Hata Oluştu");
+                    }
+
+                    return new SuccessResult("Sipariş Başarıyla Alınmıştır");
+                }
+                catch (Exception)
+                {
+                    return new ErrorResult("Hata Meydana Geldi");
+                }
             }
-            return new SuccessResult("Sipariş Başarıyla Alınmıştır");
 
         }
 
