@@ -56,9 +56,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getLastProduct")]
+        [Authorize(Roles = "SalesPerson")]
         public IActionResult LastProduct()
         {
-            var result = _productManager.LastProduct();
+            var userId = Convert.ToInt32(User.Identities.First().Name);
+            var result = _productManager.LastProduct(userıd);
             return Ok(result);
         }
 
