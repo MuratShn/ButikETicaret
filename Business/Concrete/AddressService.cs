@@ -37,7 +37,7 @@ namespace Business.Concrete
                 _addressDal.Delete(entity);
                 return new SuccessResult("Adres Silinmiştir");
             }
-            return new ErrorResult("Hata");
+            return new ErrorResult("Böyle Bir Adress Bulunmamaktadır");
 
         }
 

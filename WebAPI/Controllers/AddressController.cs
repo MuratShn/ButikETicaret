@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         public IActionResult AddressDelete(int AddressId)
         {
             var userId = Convert.ToInt32(User.Identities.First().Name);
-            var result = _addressManager.deleteAddress(userId, AddressId);
+            var result = _addressManager.deleteAddress(AddressId,userId);
             return Ok(result);
         }
         [HttpGet("getAllAddress")]
