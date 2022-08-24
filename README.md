@@ -1,5 +1,5 @@
 # ButikETicaret
-Klasik Katmanlı Mimari ,\n
+Klasik Katmanlı Mimari ,<br />
 EntityFramework(Data Access Kısmında Bolca Kullanıldı),
 Migration(Microsoft Identiy için kullanmak durumda kaldım diğer tabloları kendim oluşturmuştum),
 Fluent Validation (Çoğu modellere uygulanmadı) ,
