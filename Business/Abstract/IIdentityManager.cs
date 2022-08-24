@@ -18,5 +18,6 @@ namespace Business.Abstract
         Task<IResult> RefreshTokenLogin(string refreshToken);
         Task<IResult> GetUserProfile(string userId);
         Task<IResult> RefreshPassowrd (string userId,string password,string newPassword);
+        Task<IResult> RefreshUserInfo(CreateUserVM newUser, string userId);
     }
 }

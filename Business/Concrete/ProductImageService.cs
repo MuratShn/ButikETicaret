@@ -52,7 +52,7 @@ namespace Business.Concrete
 
             }
 
-            return new SuccessResult("Ürün Başarıyla Eklendi");
+            return new SuccessResult("Ürün Resmi Başarıyla Eklendi");
         }
 
         public IResult GetByProductIdOneImage(int productId)

@@ -89,6 +89,8 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("refreshPassword")]
+        [Authorize]
+
         public async Task<IActionResult> RefreshPassword (NewPasswordDto password)
         {
             var userId = User.Identities.First().Name;
@@ -97,6 +99,13 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
       
+        [HttpPost("refreshUserInfo")]
+        [Authorize]
+        public async Task<IActionResult> RefreshUserİnfo(CreateUserVM newUser)
+        {
+            var result = await _identityManager.RefreshUserInfo(newUser, User.Identities.First().Name);
+            return Ok(result);
+        }
 
     
 

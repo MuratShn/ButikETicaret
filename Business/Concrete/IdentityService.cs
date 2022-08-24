@@ -222,6 +222,22 @@ namespace Business.Concrete
             }
         }
 
+        public async Task<IResult> RefreshUserInfo(CreateUserVM newUser, string userId)
+        {
+            var oldUser = await _userManager.FindByIdAsync(userId);
+
+            oldUser.Email = newUser.Email;
+            oldUser.Name = newUser.Name;
+            oldUser.Surname = newUser.Surname;
+            oldUser.Gender = newUser.Gender;
+
+            var identityResult = await _userManager.UpdateAsync(oldUser);
+            if (identityResult.Succeeded)
+                return new SuccessResult("Bilgiler Başarıyla Değiştirildi");
+            else
+                return new ErrorResult("Bİlgiler Değiştilemedi");
+        }
+
         //public async Task<IResult> FacebookLogin(GoogleLoginVm User)
         //{
 

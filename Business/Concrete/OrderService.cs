@@ -47,10 +47,13 @@ namespace Business.Concrete
                         throw new Exception("Hata Oluştu");
                     }
 
+                    scope.Complete();
                     return new SuccessResult("Sipariş Başarıyla Alınmıştır");
+
                 }
                 catch (Exception)
                 {
+                    scope.Dispose();
                     return new ErrorResult("Hata Meydana Geldi");
                 }
             }
