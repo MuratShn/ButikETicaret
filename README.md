@@ -6,5 +6,5 @@ Fluent Validation (Çoğu modellere uygulanmadı) , <br />
 .Net Core Identity (RefreshPassword,RefreshToken,ExternalLogin(Google,Facebook)...), <br />
 JWT Token(Rol bazlı çalışma mevcuttur),  <br />
 Microsoft Cache (1 2 yerde kullanıldı sadece) <br />
-CustomResult yapısı oluşturulup heryerde o kullanılmıştır, <br />
+CustomResult yapısı oluşturulup her yerde o kullanılmıştır, <br />
 ....
