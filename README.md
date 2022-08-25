@@ -1,6 +1,6 @@
-# ButikETicaret
-Bir Butik Mini E-Ticaret uygulamasıdır 
-Özellik olarak klasik rollere göre girişler mevcuttur(2 adet satıcı ve kullanıcı)
+# ButikETicaret <br/>
+Bir Butik Mini E-Ticaret uygulamasıdır  <br/>
+Özellik olarak klasik rollere göre girişler mevcuttur(2 adet satıcı ve kullanıcı) <br/>
 kullanıcı rölü  ürün sipariş'i ,favorilere ekleme ,sipariş ettiği ürüne yorum yapma , sepete ekleme , klasik kullanıcı ayarları yapılandırma vb işlemleri yaparken <br/>
 satıcı rölü kullanıcıdan farklı olarak ürün ekleyip düzenleyebilmekte <br/>
 Proje hedeflediğimden çok daha uzun sürdü bunun en büyük sebeplerinden biri ürün varyantı olması yani bir üründe hem renkler hem bedenler olunca karışıklık meydana geliyor <br/>
